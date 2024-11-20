@@ -1,7 +1,7 @@
 import 'package:day_night_switcher/day_night_switcher.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/Screen/NotificationsPage.dart';
-import 'package:frontend/Screen/ProfilePage.dart';
+import 'package:frontend/Screen/EditProfilePage.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -50,7 +50,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     onPressed: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const EditProfilePage(),
+                        builder: (context) =>  EditProfilePage(),
                       ),
                     ),
                     icon: const Icon(
