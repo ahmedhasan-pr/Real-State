@@ -19,22 +19,12 @@ class _RegisterPageState extends State<RegisterPage> {
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          
-          backgroundColor: Colors.white,
-          leading: IconButton(
-            onPressed: ()=>Navigator.pop(context),
-            icon: const Icon(
-              Icons.arrow_back,
-              size: 35,
-            ),
-          ),
-        ),
+       
         backgroundColor: Colors.white,
         body: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.only(left: 30, top: 10),
+              padding: const EdgeInsets.only(left: 30, top: 70),
               child: RichText(
                 text: TextSpan(
                   children: [

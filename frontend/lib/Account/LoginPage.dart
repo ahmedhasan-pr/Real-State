@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/Accessories/TextFild.dart';
 import 'package:frontend/Account/RegisterPage.dart';
+import 'package:frontend/Screen/NavBarPage.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -109,7 +110,7 @@ class _LoginPageState extends State<LoginPage> {
               height: 60,
               width: 340,
               child: ElevatedButton(
-                onPressed: _login,
+                onPressed: (){Navigator.of(context).push(MaterialPageRoute(builder: (context)=>NavBarPage()));},
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.yellow.shade900,
                   shape: RoundedRectangleBorder(

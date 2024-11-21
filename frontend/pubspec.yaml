@@ -45,8 +45,7 @@ dependencies:
   day_night_switcher: ^0.2.0+1
   intl: ^0.18.0
   image_picker: ^0.8.5+3
-
-
+  persistent_bottom_nav_bar: ^6.2.1
 dev_dependencies:
   flutter_test:
     sdk: flutter

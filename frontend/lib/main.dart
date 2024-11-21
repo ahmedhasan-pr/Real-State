@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/Provider/FavoriteProvider.dart';
 import 'package:frontend/Screen/HomePage.dart';
+import 'package:frontend/Screen/Intropage.dart';
 import 'package:frontend/Screen/NavBarPage.dart';
 import 'package:frontend/Screen/NotificationsPage.dart';
 import 'package:provider/provider.dart';
@@ -19,7 +20,7 @@ class MyApp extends StatelessWidget {
       create: (context)=>FavoriteProvider(),
       child: const MaterialApp(
        debugShowCheckedModeBanner: false,
-       home: NavBarPage(),
+       home: Intropage(),
       ),
     );
   }

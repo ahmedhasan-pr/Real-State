@@ -33,15 +33,16 @@ class _HomePageState extends State<HomePage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         actions: [
           // زر فتح الدرج الجانبي
           IconButton(
             onPressed: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => NotificationsPage(),
-                      ),
-                    ),
+              context,
+              MaterialPageRoute(
+                builder: (context) => NotificationsPage(),
+              ),
+            ),
             icon: Icon(
               Icons.notifications,
               size: 45,

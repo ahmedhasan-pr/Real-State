@@ -14,6 +14,7 @@ class _FavoritespageState extends State<Favoritespage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: const Align(
             alignment: Alignment.topRight,
             child: Text(

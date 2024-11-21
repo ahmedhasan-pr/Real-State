@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/Account/LoginPage.dart';
 import 'package:frontend/Screen/NavBarPage.dart';
 
 class Intropage extends StatefulWidget {
@@ -87,7 +88,7 @@ class _IntropageState extends State<Intropage>
               child: ElevatedButton(
                 
                 onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context)=>NavBarPage()));
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context)=>LoginPage()));
                 },
                 style: ElevatedButton.styleFrom(
                   foregroundColor: Colors.black,

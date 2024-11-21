@@ -8,7 +8,7 @@ import 'package:photo_view/photo_view_gallery.dart';
 import 'dart:async';
 
 class DetailsPage extends StatefulWidget {
-  const DetailsPage({super.key});
+  const DetailsPage({super.key, });
 
   @override
   State<DetailsPage> createState() => _DetailsPageState();

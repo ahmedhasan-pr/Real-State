@@ -18,6 +18,7 @@ class _SettingsPageState extends State<SettingsPage> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
+            automaticallyImplyLeading: false,
           title: const Align(
             alignment: Alignment.topRight,
             child: Text(
