@@ -4,6 +4,7 @@ import 'package:frontend/Model/model.dart';
 import 'package:frontend/Screen/DetailsPage.dart';
 import 'package:frontend/Screen/NotificationsPage.dart';
 import 'package:skeletonizer/skeletonizer.dart'; // استيراد Skeletonizer
+import 'package:frontend/Api/api.dart'; // تأكد من إضافة استيراد الـ API أو الدالة التي تجلب البيانات.
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -12,8 +13,7 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage>
-    with SingleTickerProviderStateMixin {
+class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
   late TabController _tabController;
   late Future<List<Details>> futureDetails;
 
@@ -24,10 +24,13 @@ class _HomePageState extends State<HomePage>
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
 
-    // محاكاة تحميل البيانات
-    Future.delayed(const Duration(seconds: 1), () {
+    // جلب البيانات بعد التحميل
+    futureDetails = getAllDetails();  // تأكد من استخدام دالة getAllDetails لجلب البيانات
+
+    // محاكاة التحميل
+    Future.delayed(const Duration(seconds: 3), () {
       setState(() {
-        _isLoading = false; // التبديل بعد مرور الوقت
+        _isLoading = false;
       });
     });
   }
@@ -179,12 +182,24 @@ class _HomePageState extends State<HomePage>
 
   // دالة عرض الـ Skeletonizer أثناء التحميل
   Widget _buildTabContent() {
-    return _isLoading
-        ? _buildSkeletonizer() // عرض الـ Skeletonizer إذا كانت البيانات في حالة تحميل
-        : _buildContent(); // عرض المحتوى الثابت بعد اكتمال التحميل
+    return FutureBuilder<List<Details>>(
+      future: futureDetails,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return _buildSkeletonizer(); // عرض الـ Skeletonizer إذا كانت البيانات في حالة تحميل
+        } else if (snapshot.hasError) {
+          return const Center(child: Text('حدث خطأ في تحميل البيانات'));
+        } else if (snapshot.hasData) {
+          return _buildContent(snapshot.data!); // عرض المحتوى الثابت بعد اكتمال التحميل
+        } else {
+          return const Center(child: Text('لا توجد بيانات'));
+        }
+        
+      },
+    );
   }
 
-// دالة عرض الـ Skeletonizer أثناء التحميل
+  // دالة عرض الـ Skeletonizer أثناء التحميل
   Widget _buildSkeletonizer() {
     return Skeletonizer(
       child: GridView.builder(
@@ -228,7 +243,7 @@ class _HomePageState extends State<HomePage>
                   ),
                   // محاكاة حالة البيع
                   Positioned(
-                    top:250,
+                    top: 250,
                     right: 15,
                     child: Container(
                       width: 60,
@@ -263,8 +278,8 @@ class _HomePageState extends State<HomePage>
     );
   }
 
-// عرض المحتوى الثابت بعد اكتمال التحميل
-  Widget _buildContent() {
+  // عرض المحتوى الثابت بعد اكتمال التحميل
+  Widget _buildContent(List<Details> data) {
     return GridView.builder(
       physics: const NeverScrollableScrollPhysics(),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -273,15 +288,15 @@ class _HomePageState extends State<HomePage>
         mainAxisSpacing: 10, // زيادة المسافة بين الكارد والكارد
         crossAxisSpacing: 0, // زيادة المسافة بين الأعمدة
       ),
-      itemCount: 2, // عدد العناصر المعروضة
+      itemCount: data.length, // عدد العناصر المعروضة
       itemBuilder: (BuildContext context, int index) {
+        final details = data[index]; // استخدام البيانات الفعلية
         return GestureDetector(
           onTap: () {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) =>
-                    const DetailsPage(), // الانتقال إلى صفحة التفاصيل
+                builder: (context) => const DetailsPage(), // الانتقال إلى صفحة التفاصيل
               ),
             );
           },
@@ -299,8 +314,8 @@ class _HomePageState extends State<HomePage>
                 Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
-                    image: const DecorationImage(
-                      image: AssetImage("assets/house1.jpg"),
+                    image: DecorationImage(
+                      image: NetworkImage(details.image.isNotEmpty?details.image[0]:'details.image'), // تأكد من استخدام الرابط الفعلي
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -314,17 +329,16 @@ class _HomePageState extends State<HomePage>
                     shape: BeveledRectangleBorder(
                         borderRadius: BorderRadius.circular(2)),
                     color: Colors.white,
-                    child:
-                        const Text("\$120,000", style: TextStyle(fontSize: 20)),
+                    child: Text(details.price, style: const TextStyle(fontSize: 20)),
                   ),
                 ),
                 // حالة البيع
-                const Positioned(
+                Positioned(
                   top: 250, // تعديل الموقع ليكون بعد السعر
                   right: 15,
                   child: Text(
-                    "للبيع",
-                    style: TextStyle(
+                    details.typePrice, // عرض حالة البيع
+                    style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 20,
                         color: Colors.black),
@@ -340,14 +354,13 @@ class _HomePageState extends State<HomePage>
                         Icons.location_on,
                         color: Colors.grey[400],
                         size: 30,
-                        
                       ),
                       const SizedBox(
                         width: 180,
                       ),
-                      const Text(
-                        " حي الواسطي",
-                        style: TextStyle(
+                      Text(
+                        details.location, // عرض المنطقة
+                        style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 20,
                             color: Colors.black),
