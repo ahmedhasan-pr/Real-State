@@ -10,6 +10,7 @@ class Details(models.Model):
         ('ايجار', 'ايجار'),
     ]
     typePrice = models.CharField(max_length=10, choices=TYPE_PRICE_CHOICES, default='')
+    favorite = models.BooleanField(default=False)
     location = models.CharField(max_length=255)
     square = models.DecimalField(max_digits=10, decimal_places=2)
     bathroom = models.IntegerField()

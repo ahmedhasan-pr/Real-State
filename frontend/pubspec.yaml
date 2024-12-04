@@ -46,7 +46,7 @@ dependencies:
   intl: ^0.18.0
   image_picker: ^0.8.5+3
   persistent_bottom_nav_bar: ^6.2.1
-dev_dependencies:
+  skeletonizer: ^1.4.2
   flutter_test:
     sdk: flutter
 

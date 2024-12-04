@@ -10,22 +10,20 @@ class Navbar extends StatelessWidget {
     return BottomNavigationBar(
       iconSize: 35,
       selectedFontSize: 19,
-      selectedItemColor: Colors.blue,
+      selectedItemColor: Colors.yellow.shade900,
       unselectedItemColor: Colors.grey,
       currentIndex: 2,
-      
-      onTap: (value)=> onTap(value),
+      onTap: (value) => onTap(value),
+      elevation: 0,
       items: const [
-         BottomNavigationBarItem(
+        BottomNavigationBarItem(
           icon: Icon(Icons.settings),
           label: "",
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.favorite),
           label: "",
-          
         ),
-       
         BottomNavigationBarItem(
           icon: Icon(Icons.home_filled),
           label: "",

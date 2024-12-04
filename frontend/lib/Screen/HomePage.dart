@@ -1,9 +1,9 @@
-import 'package:buttons_tabbar/buttons_tabbar.dart';
 import 'package:flutter/material.dart';
+import 'package:buttons_tabbar/buttons_tabbar.dart';
 import 'package:frontend/Screen/DetailsPage.dart';
 import 'package:frontend/Screen/NotificationsPage.dart';
+import 'package:skeletonizer/skeletonizer.dart'; // استيراد Skeletonizer
 
-// تعريف صفحة HomePage
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -11,21 +11,28 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-// الحالة الخاصة بـ HomePage
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
-  late TabController _tabController; // متحكم التبويب
+  late TabController _tabController;
+
+  bool _isLoading = true; // المتغير الذي يعكس حالة التحميل
 
   @override
   void initState() {
     super.initState();
-    // تهيئة متحكم التبويب بعدد 3 تبويبات
     _tabController = TabController(length: 3, vsync: this);
+
+    // محاكاة تحميل البيانات
+    Future.delayed(const Duration(seconds: 1), () {
+      setState(() {
+        _isLoading = false; // التبديل بعد مرور الوقت
+      });
+    });
   }
 
   @override
   void dispose() {
-    _tabController.dispose(); // تحرير موارد المتحكم
+    _tabController.dispose();
     super.dispose();
   }
 
@@ -35,12 +42,11 @@ class _HomePageState extends State<HomePage>
       appBar: AppBar(
         automaticallyImplyLeading: false,
         actions: [
-          // زر فتح الدرج الجانبي
           IconButton(
             onPressed: () => Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => NotificationsPage(),
+                builder: (context) => const NotificationsPage(),
               ),
             ),
             icon: Icon(
@@ -51,47 +57,46 @@ class _HomePageState extends State<HomePage>
           ),
         ],
       ),
-      // الدرج الجانبي
-
-      body: Column(
-        children: [
-          // عنوان الصفحة
-          const Padding(
-            padding: EdgeInsets.only(left: 230, top: 20),
-            child: Directionality(
-              textDirection: TextDirection.rtl,
-              child: Text(" اكتشف\n منزلك الجديد",
-                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+      body: CustomScrollView(
+        slivers: [
+          const SliverToBoxAdapter(
+            child: Padding(
+              padding: EdgeInsets.only(left: 230, top: 20),
+              child: Directionality(
+                textDirection: TextDirection.rtl,
+                child: Text(
+                  " اكتشف\n منزلك الجديد",
+                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                ),
+              ),
             ),
           ),
-          const SizedBox(height: 20),
-          // صف يحتوي على زر وحقل بحث
-          Expanded(
-            flex: 2,
+          const SliverToBoxAdapter(child: SizedBox(height: 20)),
+          SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Row(
                 children: [
-                  // زر فرز
                   SizedBox(
                     height: 55,
                     width: 70,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        // محاكاة التحميل عند الضغط على الزر
+                      },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.grey.shade500,
+                        backgroundColor: Colors.yellow.shade900,
                         shadowColor: Colors.black,
                         elevation: 9,
                         shape: const RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10))),
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                        ),
                       ),
-                      child:
-                          Image.asset("assets/sort.png", width: 24, height: 24),
+                      child: Image.asset("assets/sort.png",
+                          color: Colors.white, width: 24, height: 24),
                     ),
                   ),
                   const SizedBox(width: 10),
-                  // حقل البحث
                   Expanded(
                     child: TextField(
                       textAlign: TextAlign.right,
@@ -102,15 +107,16 @@ class _HomePageState extends State<HomePage>
                               const BorderSide(color: Colors.black, width: 3),
                         ),
                         hintText: 'أماكن البحث',
-                        suffixIcon: const Icon(Icons.search, size: 35),
+                        suffixIcon: Icon(Icons.search,
+                            color: Colors.yellow.shade900, size: 35),
                         filled: true,
                         fillColor: Colors.white,
                         focusedBorder: const OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.blue, width: 2),
                         ),
                         enabledBorder: const OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.white, width: 1)),
+                          borderSide: BorderSide(color: Colors.white, width: 1),
+                        ),
                       ),
                     ),
                   ),
@@ -118,31 +124,31 @@ class _HomePageState extends State<HomePage>
               ),
             ),
           ),
-          const SizedBox(height: 10),
-          // أزرار التبويب
-          Expanded(
-            flex: 1,
+          const SliverToBoxAdapter(child: SizedBox(height: 20)),
+          SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 0),
+              padding: const EdgeInsets.symmetric(vertical: 10),
               child: Directionality(
                 textDirection: TextDirection.rtl,
                 child: ButtonsTabBar(
-                  splashColor: Colors.black,
+                  splashColor: Colors.grey,
                   elevation: 2,
                   contentCenter: true,
                   contentPadding: const EdgeInsets.symmetric(horizontal: 20),
                   buttonMargin: const EdgeInsets.symmetric(horizontal: 30),
                   controller: _tabController,
-                  backgroundColor: Colors.black,
+                  backgroundColor: Colors.yellow.shade900,
                   unselectedBackgroundColor: Colors.white,
                   labelStyle: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold),
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                   unselectedLabelStyle: const TextStyle(
-                      color: Colors.grey,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold),
+                    color: Colors.grey,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                   tabs: const [
                     Tab(text: 'منزل'),
                     Tab(text: 'قطع اراضي'),
@@ -152,283 +158,15 @@ class _HomePageState extends State<HomePage>
               ),
             ),
           ),
-          const SizedBox(height: 30),
-          // عرض محتوى التبويبات
-          Expanded(
-            flex: 8,
+          const SliverToBoxAdapter(child: SizedBox(height: 20)),
+          SliverFillRemaining(
             child: TabBarView(
               controller: _tabController,
+              physics: const NeverScrollableScrollPhysics(),
               children: [
-                GestureDetector(
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const DetailsPage()),
-                  ),
-                  child: Directionality(
-                    textDirection: TextDirection.rtl,
-                    child: GridView.builder(
-                      scrollDirection: Axis.vertical,
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2, // عدد الأعمدة
-                        childAspectRatio: 0.9, // نسبة العرض إلى الارتفاع
-                        mainAxisSpacing: 10, // المسافة العمودية بين العناصر
-                        crossAxisSpacing: 0, // المسافة الأفقية بين العناصر
-                      ),
-                      itemCount: 4,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Card(
-                          color: Colors.white,
-                          margin: const EdgeInsets.only(
-                              left: 20, right: 20, bottom: 4),
-                          shadowColor: Colors.black,
-                          elevation: 5,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30)),
-                          child: Stack(children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                image: const DecorationImage(
-                                  image: AssetImage(
-                                    "assets/house1.jpg",
-                                  ),
-                                  fit: BoxFit.cover, // تغطية الصورة
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: Card(
-                                shape: BeveledRectangleBorder(
-                                    borderRadius: BorderRadius.circular(2)),
-                                color: Colors.white,
-                                child: const Text("\$120,000"),
-                              ),
-                            ),
-                            const Column(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.only(left: 65),
-                                  child: Text(
-                                    "للبيع",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding:
-                                      EdgeInsets.only(right: 10, bottom: 15),
-                                  child: Row(
-                                    children: [
-                                      Icon(
-                                        Icons.location_on,
-                                        color: Colors.white60,
-                                      ),
-                                      Text(
-                                        " حي الواسطي",
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 20,
-                                          color: Colors.white60,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ]),
-                        );
-                      },
-                    ),
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const DetailsPage()),
-                  ),
-                  child: Directionality(
-                    textDirection: TextDirection.rtl,
-                    child: GridView.builder(
-                      scrollDirection: Axis.vertical,
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2, // عدد الأعمدة
-                        childAspectRatio: 0.9, // نسبة العرض إلى الارتفاع
-                        mainAxisSpacing: 10, // المسافة العمودية بين العناصر
-                        crossAxisSpacing: 0, // المسافة الأفقية بين العناصر
-                      ),
-                      itemCount: 4,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Card(
-                          color: Colors.white,
-                          margin: const EdgeInsets.only(
-                              left: 20, right: 20, bottom: 4),
-                          shadowColor: Colors.black,
-                          elevation: 5,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30)),
-                          child: Stack(children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                image: const DecorationImage(
-                                  image: AssetImage(
-                                    "assets/house1.jpg",
-                                  ),
-                                  fit: BoxFit.cover, // تغطية الصورة
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: Card(
-                                shape: BeveledRectangleBorder(
-                                    borderRadius: BorderRadius.circular(2)),
-                                color: Colors.white,
-                                child: const Text("\$120,000"),
-                              ),
-                            ),
-                            const Column(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.only(left: 65),
-                                  child: Text(
-                                    "للبيع",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding:
-                                      EdgeInsets.only(right: 10, bottom: 15),
-                                  child: Row(
-                                    children: [
-                                      Icon(
-                                        Icons.location_on,
-                                        color: Colors.white60,
-                                      ),
-                                      Text(
-                                        " حي الواسطي",
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 20,
-                                          color: Colors.white60,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ]),
-                        );
-                      },
-                    ),
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const DetailsPage()),
-                  ),
-                  child: Directionality(
-                    textDirection: TextDirection.rtl,
-                    child: GridView.builder(
-                      scrollDirection: Axis.vertical,
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2, // عدد الأعمدة
-                        childAspectRatio: 0.9, // نسبة العرض إلى الارتفاع
-                        mainAxisSpacing: 10, // المسافة العمودية بين العناصر
-                        crossAxisSpacing: 0, // المسافة الأفقية بين العناصر
-                      ),
-                      itemCount: 4,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Card(
-                          color: Colors.white,
-                          margin: const EdgeInsets.only(
-                              left: 20, right: 20, bottom: 4),
-                          shadowColor: Colors.black,
-                          elevation: 5,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30)),
-                          child: Stack(children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                image: const DecorationImage(
-                                  image: AssetImage(
-                                    "assets/house1.jpg",
-                                  ),
-                                  fit: BoxFit.cover, // تغطية الصورة
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: Card(
-                                shape: BeveledRectangleBorder(
-                                    borderRadius: BorderRadius.circular(2)),
-                                color: Colors.white,
-                                child: const Text("\$120,000"),
-                              ),
-                            ),
-                            const Column(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.only(left: 65),
-                                  child: Text(
-                                    "للبيع",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding:
-                                      EdgeInsets.only(right: 10, bottom: 15),
-                                  child: Row(
-                                    children: [
-                                      Icon(
-                                        Icons.location_on,
-                                        color: Colors.white60,
-                                      ),
-                                      Text(
-                                        " حي الواسطي",
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 15,
-                                          color: Colors.black,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ]),
-                        );
-                      },
-                    ),
-                  ),
-                ),
+                _buildTabContent(),
+                _buildTabContent(),
+                _buildTabContent(),
               ],
             ),
           ),
@@ -436,4 +174,185 @@ class _HomePageState extends State<HomePage>
       ),
     );
   }
+
+  // دالة عرض الـ Skeletonizer أثناء التحميل
+  Widget _buildTabContent() {
+    return _isLoading
+        ? _buildSkeletonizer() // عرض الـ Skeletonizer إذا كانت البيانات في حالة تحميل
+        : _buildContent(); // عرض المحتوى الثابت بعد اكتمال التحميل
+  }
+
+// دالة عرض الـ Skeletonizer أثناء التحميل
+  Widget _buildSkeletonizer() {
+    return Skeletonizer(
+      child: GridView.builder(
+        physics: const NeverScrollableScrollPhysics(),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 1,
+          childAspectRatio: 0.9, // نفس النسبة التي تستخدمها في المحتوى
+          mainAxisSpacing: 10,
+          crossAxisSpacing: 10,
+        ),
+        itemCount: 6, // عدد العناصر المعروضة أثناء التحميل
+        itemBuilder: (BuildContext context, int index) {
+          return Card(
+            color: Colors.grey.shade300,
+            margin: const EdgeInsets.only(left: 20, right: 20, bottom: 4),
+            shadowColor: Colors.black,
+            elevation: 5,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+            child: Container(
+              color: Colors.white,
+              child: Stack(
+                children: [
+                  // محاكاة الصورة باستخدام لون رمادي (نفس الحجم)
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.grey.shade200, // محاكاة الصورة بلون رمادي
+                    ),
+                    height: 120, // تحديد ارتفاع مشابه للصورة الفعلية
+                  ),
+                  // محاكاة السعر
+                  Positioned(
+                    top: 130,
+                    right: 10,
+                    child: Container(
+                      width: 100,
+                      height: 20,
+                      color: Colors.grey.shade400, // لون محاكاة السعر
+                    ),
+                  ),
+                  // محاكاة حالة البيع
+                  Positioned(
+                    top: 160,
+                    right: 15,
+                    child: Container(
+                      width: 60,
+                      height: 15,
+                      color: Colors.grey.shade400, // لون محاكاة حالة البيع
+                    ),
+                  ),
+                  // محاكاة المنطقة
+                  Positioned(
+                    top: 180,
+                    right: 15,
+                    child: Row(
+                      children: [
+                        Icon(Icons.location_on, color: Colors.grey.shade600),
+                        SizedBox(width: 30,),
+                        Container(
+                          width: 80,
+                          height: 15,
+                          color: Colors.grey.shade400, // محاكاة المنطقة
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+// عرض المحتوى الثابت بعد اكتمال التحميل
+Widget _buildContent() {
+  return GridView.builder(
+    physics: const NeverScrollableScrollPhysics(),
+    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+      crossAxisCount: 1, // إبقاء عمود واحد
+      childAspectRatio: 0.9, // الحفاظ على نفس النسبة
+      mainAxisSpacing: 20,  // زيادة المسافة بين الكارد والكارد
+      crossAxisSpacing: 20, // زيادة المسافة بين الأعمدة
+    ),
+    itemCount: 3, // عدد العناصر المعروضة
+    itemBuilder: (BuildContext context, int index) {
+      return GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) =>
+                  const DetailsPage(), // الانتقال إلى صفحة التفاصيل
+            ),
+          );
+        },
+        child: Card(
+          color: Colors.white,
+          margin: const EdgeInsets.only(left: 30, right: 20, bottom: 20), // زيادة المسافة أسفل الكارد
+          shadowColor: Colors.black,
+          elevation: 5,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          child: Stack(
+            children: [
+              // صورة العنصر الفعلي
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  image: const DecorationImage(
+                    image: AssetImage("assets/house1.jpg"),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                height: 200, // تحديد ارتفاع الكارد إلى 200
+              ),
+              // سعر العنصر
+              Positioned(
+                top: 210, // تغيير الموقع ليكون بعد الصورة
+                right: 15,
+                child: Card(
+                  shape: BeveledRectangleBorder(
+                      borderRadius: BorderRadius.circular(2)),
+                  color: Colors.white,
+                  child: const Text("\$120,000", style: TextStyle(fontSize: 20)),
+                ),
+              ),
+              // حالة البيع
+              const Positioned(
+                top: 250, // تعديل الموقع ليكون بعد السعر
+                right: 15,
+                child: Text(
+                  "للبيع",
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                      color: Colors.black),
+                ),
+              ),
+              // المنطقة
+              Positioned(
+                top: 270, // تعديل الموقع ليكون بعد حالة البيع
+                right: 15,
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.location_on,
+                      color: Colors.grey[400],
+                      size: 30,
+                    ),
+                    const SizedBox(
+                      width: 200,
+                    ),
+                    const Text(
+                      " حي الواسطي",
+                      style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 20,
+                          color: Colors.black),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    },
+  );
 }
+    }
