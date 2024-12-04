@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:buttons_tabbar/buttons_tabbar.dart';
+import 'package:frontend/Model/model.dart';
 import 'package:frontend/Screen/DetailsPage.dart';
 import 'package:frontend/Screen/NotificationsPage.dart';
 import 'package:skeletonizer/skeletonizer.dart'; // استيراد Skeletonizer
@@ -14,6 +15,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  late Future<List<Details>> futureDetails;
 
   bool _isLoading = true; // المتغير الذي يعكس حالة التحميل
 
@@ -189,15 +191,15 @@ class _HomePageState extends State<HomePage>
         physics: const NeverScrollableScrollPhysics(),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 1,
-          childAspectRatio: 0.9, // نفس النسبة التي تستخدمها في المحتوى
+          childAspectRatio: 1.2, // نفس النسبة التي تستخدمها في المحتوى
           mainAxisSpacing: 10,
           crossAxisSpacing: 10,
         ),
-        itemCount: 6, // عدد العناصر المعروضة أثناء التحميل
+        itemCount: 2, // عدد العناصر المعروضة أثناء التحميل
         itemBuilder: (BuildContext context, int index) {
           return Card(
             color: Colors.grey.shade300,
-            margin: const EdgeInsets.only(left: 20, right: 20, bottom: 4),
+            margin: const EdgeInsets.only(left: 20, right: 20, bottom: 10),
             shadowColor: Colors.black,
             elevation: 5,
             shape:
@@ -212,12 +214,12 @@ class _HomePageState extends State<HomePage>
                       borderRadius: BorderRadius.circular(10),
                       color: Colors.grey.shade200, // محاكاة الصورة بلون رمادي
                     ),
-                    height: 120, // تحديد ارتفاع مشابه للصورة الفعلية
+                    height: 200, // تحديد ارتفاع مشابه للصورة الفعلية
                   ),
                   // محاكاة السعر
                   Positioned(
-                    top: 130,
-                    right: 10,
+                    top: 210, // تغيير الموقع ليكون بعد الصورة
+                    right: 15,
                     child: Container(
                       width: 100,
                       height: 20,
@@ -226,7 +228,7 @@ class _HomePageState extends State<HomePage>
                   ),
                   // محاكاة حالة البيع
                   Positioned(
-                    top: 160,
+                    top:250,
                     right: 15,
                     child: Container(
                       width: 60,
@@ -236,12 +238,14 @@ class _HomePageState extends State<HomePage>
                   ),
                   // محاكاة المنطقة
                   Positioned(
-                    top: 180,
+                    top: 280,
                     right: 15,
                     child: Row(
                       children: [
                         Icon(Icons.location_on, color: Colors.grey.shade600),
-                        SizedBox(width: 30,),
+                        const SizedBox(
+                          width: 210,
+                        ),
                         Container(
                           width: 80,
                           height: 15,
@@ -260,99 +264,102 @@ class _HomePageState extends State<HomePage>
   }
 
 // عرض المحتوى الثابت بعد اكتمال التحميل
-Widget _buildContent() {
-  return GridView.builder(
-    physics: const NeverScrollableScrollPhysics(),
-    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-      crossAxisCount: 1, // إبقاء عمود واحد
-      childAspectRatio: 0.9, // الحفاظ على نفس النسبة
-      mainAxisSpacing: 20,  // زيادة المسافة بين الكارد والكارد
-      crossAxisSpacing: 20, // زيادة المسافة بين الأعمدة
-    ),
-    itemCount: 3, // عدد العناصر المعروضة
-    itemBuilder: (BuildContext context, int index) {
-      return GestureDetector(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) =>
-                  const DetailsPage(), // الانتقال إلى صفحة التفاصيل
-            ),
-          );
-        },
-        child: Card(
-          color: Colors.white,
-          margin: const EdgeInsets.only(left: 30, right: 20, bottom: 20), // زيادة المسافة أسفل الكارد
-          shadowColor: Colors.black,
-          elevation: 5,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          child: Stack(
-            children: [
-              // صورة العنصر الفعلي
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  image: const DecorationImage(
-                    image: AssetImage("assets/house1.jpg"),
-                    fit: BoxFit.cover,
+  Widget _buildContent() {
+    return GridView.builder(
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 1, // إبقاء عمود واحد
+        childAspectRatio: 1.2, // الحفاظ على نفس النسبة
+        mainAxisSpacing: 10, // زيادة المسافة بين الكارد والكارد
+        crossAxisSpacing: 0, // زيادة المسافة بين الأعمدة
+      ),
+      itemCount: 2, // عدد العناصر المعروضة
+      itemBuilder: (BuildContext context, int index) {
+        return GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    const DetailsPage(), // الانتقال إلى صفحة التفاصيل
+              ),
+            );
+          },
+          child: Card(
+            color: Colors.white,
+            margin: const EdgeInsets.only(
+                left: 30, right: 20, bottom: 10), // زيادة المسافة أسفل الكارد
+            shadowColor: Colors.black,
+            elevation: 5,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            child: Stack(
+              children: [
+                // صورة العنصر الفعلي
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    image: const DecorationImage(
+                      image: AssetImage("assets/house1.jpg"),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  height: 200, // تحديد ارتفاع الكارد إلى 200
+                ),
+                // سعر العنصر
+                Positioned(
+                  top: 210, // تغيير الموقع ليكون بعد الصورة
+                  right: 15,
+                  child: Card(
+                    shape: BeveledRectangleBorder(
+                        borderRadius: BorderRadius.circular(2)),
+                    color: Colors.white,
+                    child:
+                        const Text("\$120,000", style: TextStyle(fontSize: 20)),
                   ),
                 ),
-                height: 200, // تحديد ارتفاع الكارد إلى 200
-              ),
-              // سعر العنصر
-              Positioned(
-                top: 210, // تغيير الموقع ليكون بعد الصورة
-                right: 15,
-                child: Card(
-                  shape: BeveledRectangleBorder(
-                      borderRadius: BorderRadius.circular(2)),
-                  color: Colors.white,
-                  child: const Text("\$120,000", style: TextStyle(fontSize: 20)),
+                // حالة البيع
+                const Positioned(
+                  top: 250, // تعديل الموقع ليكون بعد السعر
+                  right: 15,
+                  child: Text(
+                    "للبيع",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                        color: Colors.black),
+                  ),
                 ),
-              ),
-              // حالة البيع
-              const Positioned(
-                top: 250, // تعديل الموقع ليكون بعد السعر
-                right: 15,
-                child: Text(
-                  "للبيع",
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                      color: Colors.black),
+                // المنطقة
+                Positioned(
+                  top: 280, // تعديل الموقع ليكون بعد حالة البيع
+                  right: 15,
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.location_on,
+                        color: Colors.grey[400],
+                        size: 30,
+                        
+                      ),
+                      const SizedBox(
+                        width: 180,
+                      ),
+                      const Text(
+                        " حي الواسطي",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                            color: Colors.black),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              // المنطقة
-              Positioned(
-                top: 270, // تعديل الموقع ليكون بعد حالة البيع
-                right: 15,
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.location_on,
-                      color: Colors.grey[400],
-                      size: 30,
-                    ),
-                    const SizedBox(
-                      width: 200,
-                    ),
-                    const Text(
-                      " حي الواسطي",
-                      style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 20,
-                          color: Colors.black),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-      );
-    },
-  );
+        );
+      },
+    );
+  }
 }
-    }
