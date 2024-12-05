@@ -13,7 +13,8 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
+class _HomePageState extends State<HomePage>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
   late Future<List<Details>> futureDetails;
 
@@ -25,7 +26,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     _tabController = TabController(length: 3, vsync: this);
 
     // جلب البيانات بعد التحميل
-    futureDetails = getAllDetails();  // تأكد من استخدام دالة getAllDetails لجلب البيانات
+    futureDetails =
+        getAllDetails(); // تأكد من استخدام دالة getAllDetails لجلب البيانات
 
     // محاكاة التحميل
     Future.delayed(const Duration(seconds: 3), () {
@@ -190,11 +192,11 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         } else if (snapshot.hasError) {
           return const Center(child: Text('حدث خطأ في تحميل البيانات'));
         } else if (snapshot.hasData) {
-          return _buildContent(snapshot.data!); // عرض المحتوى الثابت بعد اكتمال التحميل
+          return _buildContent(
+              snapshot.data!); // عرض المحتوى الثابت بعد اكتمال التحميل
         } else {
           return const Center(child: Text('لا توجد بيانات'));
         }
-        
       },
     );
   }
@@ -210,7 +212,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
           mainAxisSpacing: 10,
           crossAxisSpacing: 10,
         ),
-        itemCount: 2, // عدد العناصر المعروضة أثناء التحميل
+        itemCount: 6, // عدد العناصر المعروضة أثناء التحميل
         itemBuilder: (BuildContext context, int index) {
           return Card(
             color: Colors.grey.shade300,
@@ -256,10 +258,11 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                     top: 280,
                     right: 15,
                     child: Row(
+                      mainAxisSize: MainAxisSize.max,
                       children: [
                         Icon(Icons.location_on, color: Colors.grey.shade600),
                         const SizedBox(
-                          width: 210,
+                          width: 10,
                         ),
                         Container(
                           width: 80,
@@ -296,7 +299,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const DetailsPage(), // الانتقال إلى صفحة التفاصيل
+                builder: (context) =>
+                    const DetailsPage(), // الانتقال إلى صفحة التفاصيل
               ),
             );
           },
@@ -315,7 +319,9 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     image: DecorationImage(
-                      image: NetworkImage(details.image.isNotEmpty?details.image[0]:'details.image'), // تأكد من استخدام الرابط الفعلي
+                      image: NetworkImage(details.image.isNotEmpty
+                          ? details.image[0]
+                          : 'details.image'), // تأكد من استخدام الرابط الفعلي
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -329,7 +335,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                     shape: BeveledRectangleBorder(
                         borderRadius: BorderRadius.circular(2)),
                     color: Colors.white,
-                    child: Text(details.price, style: const TextStyle(fontSize: 20)),
+                    child: Text(details.price,
+                        style: const TextStyle(fontSize: 20)),
                   ),
                 ),
                 // حالة البيع
@@ -346,28 +353,30 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                 ),
                 // المنطقة
                 Positioned(
-                  top: 280, // تعديل الموقع ليكون بعد حالة البيع
+                  top: 280,
                   right: 15,
                   child: Row(
+                    mainAxisSize: MainAxisSize
+                        .max, // لتحديد المساحة بناءً على محتوى العناصر فقط
                     children: [
                       Icon(
                         Icons.location_on,
                         color: Colors.grey[400],
                         size: 30,
                       ),
-                      const SizedBox(
-                        width: 210,
-                      ),
+                      const SizedBox(width: 10),
                       Text(
-                        details.location, // عرض المنطقة
+                        details.location, // عرض الموقع
                         style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                            color: Colors.black),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          color: Colors.black,
+                        ),
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ],
                   ),
-                ),
+                )
               ],
             ),
           ),
