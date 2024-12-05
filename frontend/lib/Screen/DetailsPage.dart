@@ -8,7 +8,9 @@ import 'package:photo_view/photo_view_gallery.dart';
 import 'dart:async';
 
 class DetailsPage extends StatefulWidget {
-  const DetailsPage({super.key, });
+  const DetailsPage({
+    super.key,
+  });
 
   @override
   State<DetailsPage> createState() => _DetailsPageState();
@@ -132,39 +134,31 @@ class _DetailsPageState extends State<DetailsPage> {
                       ),
                       Positioned(
                         top: 50,
-                        right: 10,
-                        left: 10,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            IconButton(
-                              onPressed: () => Navigator.pop(context),
-                              icon: const Icon(Icons.arrow_back, color: Colors.white, size: 35),
-                            ),
-                            IconButton(
-                              onPressed: () {
-                                // Toggle the favorite status in the provider
-                                provider.toggleFavorite(detail);
+                        left: 350,
+                        child: IconButton(
+                          onPressed: () {
+                            // Toggle the favorite status in the provider
+                            provider.toggleFavorite(detail);
 
-                                // Show the appropriate Snackbar message
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(isFavorite ? 'تمت إزالة من المفضلة' : 'أضيفت إلى المفضلة'),
-                                  ),
-                                );
-
-                                // Update the state to reflect the change
-                                setState(() {
-                                  isFavorite = !isFavorite;
-                                });
-                              },
-                              icon: Icon(
-                                isFavorite ? Icons.favorite : Icons.favorite_border,
-                                color: isFavorite ? Colors.red : Colors.grey,
-                                size: 35,
+                            // Show the appropriate Snackbar message
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(isFavorite
+                                    ? 'تمت إزالة من المفضلة'
+                                    : 'أضيفت إلى المفضلة'),
                               ),
-                            ),
-                          ],
+                            );
+
+                            // Update the state to reflect the change
+                            setState(() {
+                              isFavorite = !isFavorite;
+                            });
+                          },
+                          icon: Icon(
+                            isFavorite ? Icons.favorite : Icons.favorite_border,
+                            color: isFavorite ? Colors.red : Colors.grey,
+                            size: 35,
+                          ),
                         ),
                       ),
                     ],
@@ -177,12 +171,16 @@ class _DetailsPageState extends State<DetailsPage> {
                         padding: const EdgeInsets.only(left: 45),
                         child: Text(
                           detail.typePrice,
-                          style: const TextStyle(fontSize: 30, color: Colors.black, fontWeight: FontWeight.bold),
+                          style: const TextStyle(
+                              fontSize: 30,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold),
                         ),
                       ),
                       Text(
                         "\$${detail.price}",
-                        style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                        style: const TextStyle(
+                            fontSize: 30, fontWeight: FontWeight.bold),
                       ),
                     ],
                   ),
@@ -193,7 +191,8 @@ class _DetailsPageState extends State<DetailsPage> {
                         const Icon(Icons.location_on_outlined, size: 30),
                         Text(
                           detail.location,
-                          style: TextStyle(fontSize: 20, color: Colors.grey[600]),
+                          style:
+                              TextStyle(fontSize: 20, color: Colors.grey[600]),
                         ),
                       ],
                     ),
@@ -204,36 +203,63 @@ class _DetailsPageState extends State<DetailsPage> {
                     children: [
                       Column(
                         children: [
-                          Text("حمام", style: TextStyle(fontSize: 20, color: Colors.grey.shade800)),
-                          Text("${detail.bathroom}", style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20)),
+                          Text("حمام",
+                              style: TextStyle(
+                                  fontSize: 20, color: Colors.grey.shade800)),
+                          Text("${detail.bathroom}",
+                              style: const TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20)),
                         ],
                       ),
                       Column(
                         children: [
-                          Text("غرفة", style: TextStyle(fontSize: 20, color: Colors.grey.shade800)),
-                          Text("${detail.room}", style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20)),
+                          Text("غرفة",
+                              style: TextStyle(
+                                  fontSize: 20, color: Colors.grey.shade800)),
+                          Text("${detail.room}",
+                              style: const TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20)),
                         ],
                       ),
                       Column(
                         children: [
-                          Text("المساحة", style: TextStyle(fontSize: 20, color: Colors.grey.shade800)),
-                          Text("${detail.square.toStringAsFixed(0)} m²", style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20)),
+                          Text("المساحة",
+                              style: TextStyle(
+                                  fontSize: 20, color: Colors.grey.shade800)),
+                          Text("${detail.square.toStringAsFixed(0)} m²",
+                              style: const TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20)),
                         ],
                       ),
                       Column(
                         children: [
-                          Text("المرآب", style: TextStyle(fontSize: 20, color: Colors.grey.shade800)),
-                          Text(detail.garage ? "متاح" : "غير متاح", style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20)),
+                          Text("المرآب",
+                              style: TextStyle(
+                                  fontSize: 20, color: Colors.grey.shade800)),
+                          Text(detail.garage ? "متاح" : "غير متاح",
+                              style: const TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20)),
                         ],
                       ),
                     ],
                   ),
                   const Padding(
                     padding: EdgeInsets.only(left: 240, top: 10),
-                    child: Text("وصف المنزل", style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
+                    child: Text("وصف المنزل",
+                        style: TextStyle(
+                            fontSize: 25, fontWeight: FontWeight.bold)),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 30, vertical: 10),
                     child: SizedBox(
                       height: 150,
                       child: Directionality(
@@ -244,8 +270,12 @@ class _DetailsPageState extends State<DetailsPage> {
                             maxLines: 5,
                             readMoreText: 'عرض المزيد',
                             readLessText: 'عرض أقل',
-                            textStyle: const TextStyle(fontSize: 20, color: Colors.black),
-                            buttonTextStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.blue),
+                            textStyle: const TextStyle(
+                                fontSize: 20, color: Colors.black),
+                            buttonTextStyle: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.blue),
                           ),
                         ),
                       ),

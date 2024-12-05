@@ -356,7 +356,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                         size: 30,
                       ),
                       const SizedBox(
-                        width: 180,
+                        width: 210,
                       ),
                       Text(
                         details.location, // عرض المنطقة
