@@ -1,10 +1,9 @@
-import 'package:flutter/material.dart';
 import 'package:buttons_tabbar/buttons_tabbar.dart';
+import 'package:flutter/material.dart';
 import 'package:frontend/Model/model.dart';
 import 'package:frontend/Screen/DetailsPage.dart';
-import 'package:frontend/Screen/NotificationsPage.dart';
-import 'package:skeletonizer/skeletonizer.dart'; // استيراد Skeletonizer
-import 'package:frontend/Api/api.dart'; // تأكد من إضافة استيراد الـ API أو الدالة التي تجلب البيانات.
+import 'package:skeletonizer/skeletonizer.dart';
+import 'package:frontend/Api/api.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -13,23 +12,19 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage>
-    with SingleTickerProviderStateMixin {
+class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
   late TabController _tabController;
   late Future<List<Details>> futureDetails;
 
-  bool _isLoading = true; // المتغير الذي يعكس حالة التحميل
+  bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
 
-    // جلب البيانات بعد التحميل
-    futureDetails =
-        getAllDetails(); // تأكد من استخدام دالة getAllDetails لجلب البيانات
+    futureDetails = getAllDetails();
 
-    // محاكاة التحميل
     Future.delayed(const Duration(seconds: 3), () {
       setState(() {
         _isLoading = false;
@@ -50,12 +45,9 @@ class _HomePageState extends State<HomePage>
         automaticallyImplyLeading: false,
         actions: [
           IconButton(
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const NotificationsPage(),
-              ),
-            ),
+            onPressed: () {
+              // ... إجراءات الإشعارات
+            },
             icon: Icon(
               Icons.notifications,
               size: 45,
@@ -72,7 +64,7 @@ class _HomePageState extends State<HomePage>
               child: Directionality(
                 textDirection: TextDirection.rtl,
                 child: Text(
-                  " اكتشف\n منزلك الجديد",
+                  "اكتشف\n منزلك الجديد",
                   style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                 ),
               ),
@@ -89,7 +81,7 @@ class _HomePageState extends State<HomePage>
                     width: 70,
                     child: ElevatedButton(
                       onPressed: () {
-                        // محاكاة التحميل عند الضغط على الزر
+                        // محاكاة التحميل
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.yellow.shade900,
@@ -182,18 +174,16 @@ class _HomePageState extends State<HomePage>
     );
   }
 
-  // دالة عرض الـ Skeletonizer أثناء التحميل
   Widget _buildTabContent() {
     return FutureBuilder<List<Details>>(
       future: futureDetails,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return _buildSkeletonizer(); // عرض الـ Skeletonizer إذا كانت البيانات في حالة تحميل
+          return _buildSkeletonizer(); // أثناء التحميل
         } else if (snapshot.hasError) {
           return const Center(child: Text('حدث خطأ في تحميل البيانات'));
         } else if (snapshot.hasData) {
-          return _buildContent(
-              snapshot.data!); // عرض المحتوى الثابت بعد اكتمال التحميل
+          return _buildContent(snapshot.data!); // عرض المحتوى بعد التحميل
         } else {
           return const Center(child: Text('لا توجد بيانات'));
         }
@@ -201,182 +191,155 @@ class _HomePageState extends State<HomePage>
     );
   }
 
-  // دالة عرض الـ Skeletonizer أثناء التحميل
-  Widget _buildSkeletonizer() {
-    return Skeletonizer(
-      child: GridView.builder(
-        physics: const NeverScrollableScrollPhysics(),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 1,
-          childAspectRatio: 1.2, // نفس النسبة التي تستخدمها في المحتوى
-          mainAxisSpacing: 10,
-          crossAxisSpacing: 10,
-        ),
-        itemCount: 6, // عدد العناصر المعروضة أثناء التحميل
-        itemBuilder: (BuildContext context, int index) {
-          return Card(
-            color: Colors.grey.shade300,
-            margin: const EdgeInsets.only(left: 20, right: 20, bottom: 10),
-            shadowColor: Colors.black,
-            elevation: 5,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-            child: Container(
-              color: Colors.white,
-              child: Stack(
-                children: [
-                  // محاكاة الصورة باستخدام لون رمادي (نفس الحجم)
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.grey.shade200, // محاكاة الصورة بلون رمادي
-                    ),
-                    height: 200, // تحديد ارتفاع مشابه للصورة الفعلية
+ Widget _buildSkeletonizer() {
+  return Skeletonizer(
+    child: GridView.builder(
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 1,
+        childAspectRatio: 1.2,
+        mainAxisSpacing: 10,
+        crossAxisSpacing: 10,
+      ),
+      itemCount: 6, // عدد العناصر أثناء التحميل
+      itemBuilder: (BuildContext context, int index) {
+        return Card(
+          color: Colors.grey.shade300,
+          margin: const EdgeInsets.only(left: 20, right: 20, bottom: 10),
+          shadowColor: Colors.black,
+          elevation: 5,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+          child: Container(
+            color: Colors.white,
+            child: Stack(
+              children: [
+                // محاكاة الصورة
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.grey.shade200,
                   ),
-                  // محاكاة السعر
-                  Positioned(
-                    top: 210, // تغيير الموقع ليكون بعد الصورة
-                    right: 15,
+                  height: 200,
+                ),
+                Positioned(
+                  top: 210,
+                  right: 15,
+                  child: Card(
+                    shape: BeveledRectangleBorder(borderRadius: BorderRadius.circular(2)),
+                    color: Colors.grey.shade200, // محاكاة السعر
                     child: Container(
                       width: 100,
                       height: 20,
-                      color: Colors.grey.shade400, // لون محاكاة السعر
+                      color: Colors.grey.shade300, // محاكاة السعر
                     ),
                   ),
-                  // محاكاة حالة البيع
-                  Positioned(
-                    top: 250,
-                    right: 15,
-                    child: Container(
-                      width: 60,
-                      height: 15,
-                      color: Colors.grey.shade400, // لون محاكاة حالة البيع
-                    ),
+                ),
+                Positioned(
+                  top: 250,
+                  right: 15,
+                  child: Container(
+                    width: 120,
+                    height: 20,
+                    color: Colors.grey.shade300, // محاكاة نوع السعر
                   ),
-                  // محاكاة المنطقة
-                  Positioned(
-                    top: 280,
-                    right: 15,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Icon(Icons.location_on, color: Colors.grey.shade600),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Container(
-                          width: 80,
-                          height: 15,
-                          color: Colors.grey.shade400, // محاكاة المنطقة
-                        ),
-                      ],
-                    ),
+                ),
+                Positioned(
+                  top: 280,
+                  right: 15,
+                  child: Row(
+                    children: [
+                      Icon(Icons.location_on, color: Colors.grey[400], size: 30),
+                      const SizedBox(width: 10),
+                      Container(
+                        width: 120,
+                        height: 20,
+                        color: Colors.grey.shade300, // محاكاة الموقع
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          );
-        },
-      ),
-    );
-  }
+          ),
+        );
+      },
+    ),
+  );
+}
 
-  // عرض المحتوى الثابت بعد اكتمال التحميل
   Widget _buildContent(List<Details> data) {
     return GridView.builder(
       physics: const NeverScrollableScrollPhysics(),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 1, // إبقاء عمود واحد
-        childAspectRatio: 1.2, // الحفاظ على نفس النسبة
-        mainAxisSpacing: 10, // زيادة المسافة بين الكارد والكارد
-        crossAxisSpacing: 0, // زيادة المسافة بين الأعمدة
+        crossAxisCount: 1,
+        childAspectRatio: 1.2,
+        mainAxisSpacing: 10,
+        crossAxisSpacing: 0,
       ),
-      itemCount: data.length, // عدد العناصر المعروضة
+      itemCount: data.length,
       itemBuilder: (BuildContext context, int index) {
-        final details = data[index]; // استخدام البيانات الفعلية
+        final details = data[index];
         return GestureDetector(
           onTap: () {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) =>
-                    const DetailsPage(), // الانتقال إلى صفحة التفاصيل
+                builder: (context) => DetailsPage(detail: details), // تمرير البيانات إلى صفحة التفاصيل
               ),
             );
           },
           child: Card(
             color: Colors.white,
-            margin: const EdgeInsets.only(
-                left: 30, right: 20, bottom: 10), // زيادة المسافة أسفل الكارد
+            margin: const EdgeInsets.only(left: 30, right: 20, bottom: 10),
             shadowColor: Colors.black,
             elevation: 5,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             child: Stack(
               children: [
-                // صورة العنصر الفعلي
                 Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     image: DecorationImage(
                       image: NetworkImage(details.image.isNotEmpty
                           ? details.image[0]
-                          : 'details.image'), // تأكد من استخدام الرابط الفعلي
+                          : 'details.image'),
                       fit: BoxFit.cover,
                     ),
                   ),
-                  height: 200, // تحديد ارتفاع الكارد إلى 200
+                  height: 200,
                 ),
-                // سعر العنصر
                 Positioned(
-                  top: 210, // تغيير الموقع ليكون بعد الصورة
+                  top: 210,
                   right: 15,
                   child: Card(
-                    shape: BeveledRectangleBorder(
-                        borderRadius: BorderRadius.circular(2)),
+                    shape: BeveledRectangleBorder(borderRadius: BorderRadius.circular(2)),
                     color: Colors.white,
-                    child: Text(details.price,
-                        style: const TextStyle(fontSize: 20)),
+                    child: Text(details.price, style: const TextStyle(fontSize: 20)),
                   ),
                 ),
-                // حالة البيع
                 Positioned(
-                  top: 250, // تعديل الموقع ليكون بعد السعر
+                  top: 250,
                   right: 15,
                   child: Text(
-                    details.typePrice, // عرض حالة البيع
+                    details.typePrice,
                     style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 20,
                         color: Colors.black),
                   ),
                 ),
-                // المنطقة
                 Positioned(
                   top: 280,
                   right: 15,
                   child: Row(
-                    mainAxisSize: MainAxisSize
-                        .max, // لتحديد المساحة بناءً على محتوى العناصر فقط
                     children: [
-                      Icon(
-                        Icons.location_on,
-                        color: Colors.grey[400],
-                        size: 30,
-                      ),
+                      Icon(Icons.location_on, color: Colors.grey[400], size: 30),
                       const SizedBox(width: 10),
-                      Text(
-                        details.location, // عرض الموقع
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                          color: Colors.black,
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
+                      Text(details.location,
+                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
                     ],
                   ),
-                )
+                ),
               ],
             ),
           ),
