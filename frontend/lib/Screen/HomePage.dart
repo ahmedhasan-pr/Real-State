@@ -190,7 +190,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       },
     );
   }
-
+// الهيكل العضمي للعناصر 
  Widget _buildSkeletonizer() {
   return Skeletonizer(
     child: GridView.builder(
@@ -266,7 +266,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     ),
   );
 }
-
+// عرض العناصر 
   Widget _buildContent(List<Details> data) {
     return GridView.builder(
       physics: const NeverScrollableScrollPhysics(),
