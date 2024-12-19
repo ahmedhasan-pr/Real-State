@@ -2,8 +2,11 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
+from django.db import models
+from django.core.exceptions import ValidationError
+
 class Details(models.Model):
-    image = models.ImageField(upload_to='images/', null=True, blank=True)  # يقبل قيم فارغة
+    image = models.ImageField(upload_to='images/', null=True, blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     TYPE_PRICE_CHOICES = [
         ('شراء', 'شراء'),
@@ -17,8 +20,16 @@ class Details(models.Model):
     room = models.IntegerField()
     garage = models.BooleanField(default=False)
     description = models.CharField(max_length=300, default='')
+
     def __str__(self):
         return self.typePrice
+    
+    def save(self, *args, **kwargs):
+        # إذا كان العنصر مفضلًا بالفعل، لا يمكن تعديله ليظل مفضلًا مرة أخرى
+        if self.favorite and self.__class__.objects.filter(favorite=True).exists():
+            raise ValidationError("هذا العنصر مفضل بالفعل ولا يمكن إضافته مرة أخرى.")
+        
+        super(Details, self).save(*args, **kwargs)
 
 
 class Notification(models.Model):

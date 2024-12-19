@@ -4,6 +4,7 @@ import 'package:frontend/Screen/HomePage.dart';
 import 'package:frontend/Screen/Intropage.dart';
 import 'package:frontend/Screen/NavBarPage.dart';
 import 'package:frontend/Screen/NotificationsPage.dart';
+import 'package:frontend/Screen/RealStateSectionsPage.dart';
 import 'package:provider/provider.dart';
 void main() {
   runApp(const MyApp());
@@ -18,9 +19,9 @@ class MyApp extends StatelessWidget {
     
     return ChangeNotifierProvider(
       create: (context)=>FavoriteProvider(),
-      child: const MaterialApp(
+      child: MaterialApp(
        debugShowCheckedModeBanner: false,
-       home: Intropage(),
+       home: RealStateSectionsPage()
       ),
     );
   }

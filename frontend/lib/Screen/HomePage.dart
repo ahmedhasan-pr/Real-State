@@ -2,6 +2,7 @@ import 'package:buttons_tabbar/buttons_tabbar.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/Model/model.dart';
 import 'package:frontend/Screen/DetailsPage.dart';
+import 'package:frontend/Screen/NotificationsPage.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:frontend/Api/api.dart';
 
@@ -12,7 +13,8 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
+class _HomePageState extends State<HomePage>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
   late Future<List<Details>> futureDetails;
 
@@ -47,6 +49,12 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
           IconButton(
             onPressed: () {
               // ... إجراءات الإشعارات
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => NotificationsPage(),
+                ),
+              );
             },
             icon: Icon(
               Icons.notifications,
@@ -190,83 +198,88 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       },
     );
   }
-// الهيكل العضمي للعناصر 
- Widget _buildSkeletonizer() {
-  return Skeletonizer(
-    child: GridView.builder(
-      physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 1,
-        childAspectRatio: 1.2,
-        mainAxisSpacing: 10,
-        crossAxisSpacing: 10,
-      ),
-      itemCount: 6, // عدد العناصر أثناء التحميل
-      itemBuilder: (BuildContext context, int index) {
-        return Card(
-          color: Colors.grey.shade300,
-          margin: const EdgeInsets.only(left: 20, right: 20, bottom: 10),
-          shadowColor: Colors.black,
-          elevation: 5,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-          child: Container(
-            color: Colors.white,
-            child: Stack(
-              children: [
-                // محاكاة الصورة
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.grey.shade200,
+
+// الهيكل العضمي للعناصر
+  Widget _buildSkeletonizer() {
+    return Skeletonizer(
+      child: GridView.builder(
+        physics: const NeverScrollableScrollPhysics(),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 1,
+          childAspectRatio: 1.2,
+          mainAxisSpacing: 10,
+          crossAxisSpacing: 10,
+        ),
+        itemCount: 6, // عدد العناصر أثناء التحميل
+        itemBuilder: (BuildContext context, int index) {
+          return Card(
+            color: Colors.grey.shade300,
+            margin: const EdgeInsets.only(left: 20, right: 20, bottom: 10),
+            shadowColor: Colors.black,
+            elevation: 5,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+            child: Container(
+              color: Colors.white,
+              child: Stack(
+                children: [
+                  // محاكاة الصورة
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.grey.shade200,
+                    ),
+                    height: 200,
                   ),
-                  height: 200,
-                ),
-                Positioned(
-                  top: 210,
-                  right: 15,
-                  child: Card(
-                    shape: BeveledRectangleBorder(borderRadius: BorderRadius.circular(2)),
-                    color: Colors.grey.shade200, // محاكاة السعر
-                    child: Container(
-                      width: 100,
-                      height: 20,
-                      color: Colors.grey.shade300, // محاكاة السعر
+                  Positioned(
+                    top: 210,
+                    right: 15,
+                    child: Card(
+                      shape: BeveledRectangleBorder(
+                          borderRadius: BorderRadius.circular(2)),
+                      color: Colors.grey.shade200, // محاكاة السعر
+                      child: Container(
+                        width: 100,
+                        height: 20,
+                        color: Colors.grey.shade300, // محاكاة السعر
+                      ),
                     ),
                   ),
-                ),
-                Positioned(
-                  top: 250,
-                  right: 15,
-                  child: Container(
-                    width: 120,
-                    height: 20,
-                    color: Colors.grey.shade300, // محاكاة نوع السعر
+                  Positioned(
+                    top: 250,
+                    right: 15,
+                    child: Container(
+                      width: 120,
+                      height: 20,
+                      color: Colors.grey.shade300, // محاكاة نوع السعر
+                    ),
                   ),
-                ),
-                Positioned(
-                  top: 280,
-                  right: 15,
-                  child: Row(
-                    children: [
-                      Icon(Icons.location_on, color: Colors.grey[400], size: 30),
-                      const SizedBox(width: 10),
-                      Container(
-                        width: 120,
-                        height: 20,
-                        color: Colors.grey.shade300, // محاكاة الموقع
-                      ),
-                    ],
+                  Positioned(
+                    top: 280,
+                    right: 15,
+                    child: Row(
+                      children: [
+                        Icon(Icons.location_on,
+                            color: Colors.grey[400], size: 30),
+                        const SizedBox(width: 10),
+                        Container(
+                          width: 120,
+                          height: 20,
+                          color: Colors.grey.shade300, // محاكاة الموقع
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        );
-      },
-    ),
-  );
-}
-// عرض العناصر 
+          );
+        },
+      ),
+    );
+  }
+
+// عرض العناصر
   Widget _buildContent(List<Details> data) {
     return GridView.builder(
       physics: const NeverScrollableScrollPhysics(),
@@ -284,7 +297,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => DetailsPage(detail: details), // تمرير البيانات إلى صفحة التفاصيل
+                builder: (context) => DetailsPage(
+                    detail: details), // تمرير البيانات إلى صفحة التفاصيل
               ),
             );
           },
@@ -293,7 +307,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
             margin: const EdgeInsets.only(left: 30, right: 20, bottom: 10),
             shadowColor: Colors.black,
             elevation: 5,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             child: Stack(
               children: [
                 Container(
@@ -312,9 +327,11 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                   top: 210,
                   right: 15,
                   child: Card(
-                    shape: BeveledRectangleBorder(borderRadius: BorderRadius.circular(2)),
+                    shape: BeveledRectangleBorder(
+                        borderRadius: BorderRadius.circular(2)),
                     color: Colors.white,
-                    child: Text(details.price, style: const TextStyle(fontSize: 20)),
+                    child: Text(details.price,
+                        style: const TextStyle(fontSize: 20)),
                   ),
                 ),
                 Positioned(
@@ -333,10 +350,12 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                   right: 15,
                   child: Row(
                     children: [
-                      Icon(Icons.location_on, color: Colors.grey[400], size: 30),
+                      Icon(Icons.location_on,
+                          color: Colors.grey[400], size: 30),
                       const SizedBox(width: 10),
                       Text(details.location,
-                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 20)),
                     ],
                   ),
                 ),
