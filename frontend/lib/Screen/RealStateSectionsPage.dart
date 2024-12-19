@@ -22,43 +22,51 @@ class _RealStateSectionsPageState extends State<RealStateSectionsPage> {
   ];
   bool isLoading = true;
   @override
-  void initState(){
+  void initState() {
     super.initState();
-    ///محاكاة تحميل البيانات لمدة 3 ثانية 
-    Future.delayed(Duration(seconds: 3),(){
+
+    ///محاكاة تحميل البيانات لمدة 3 ثانية
+    Future.delayed(Duration(seconds: 3), () {
       setState(() {
-        isLoading = false; ///تغير الحالة الى تحميل المكتمل 
+        isLoading = false;
+
+        ///تغير الحالة الى تحميل المكتمل
       });
     });
   }
+
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize:  ui.Size.fromHeight(100.0), // تعيين ارتفاع AppBar
-        child: AppBar(
-          title: const Text('Sections'),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.search), // أيقونة البحث
-              onPressed: () {
-                showSearch(
-                  context: context,
-                  delegate: SearchPage<String>(
-                    items: sections,
-                    searchLabel: 'Search sections...',
-                    suggestion: const Center(child: Text('Filter sections')),
-                    failure: const Center(child: Text('No sections found')),
-                    filter: (section) => [section],
-                    builder: (section) => ListTile(title: Text(section)),
-                  ),
-                );
-              },
+        appBar: PreferredSize(
+          preferredSize: ui.Size.fromHeight(70.0), // تعيين ارتفاع AppBar
+          child: Directionality(
+            textDirection:
+                TextDirection.rtl, // تعيين اتجاه النص من اليمين لليسار
+            child: AppBar(
+              title: const Text('البحث'), // العنوان باللغة العربية
+              actions: [
+                IconButton(
+                  icon: const Icon(Icons.search), // أيقونة البحث
+                  onPressed: () {
+                    showSearch(
+                      context: context,
+                      delegate: SearchPage<String>(
+                        items: sections,
+                        searchLabel: '...ابحث عن العقار', // النص بالعربية
+                        suggestion: const Center(child: Text('تصفية العقار')),
+                        failure: const Center(
+                            child: Text('لم يتم العثور على العقار')),
+                        filter: (section) => [section],
+                        builder: (section) => ListTile(title: Text(section)),
+                      ),
+                    );
+                  },
+                ),
+              ],
             ),
-          ],
+          ),
         ),
-      ),
-      body: isLoading ? _buildSkeletonizer():_buildContent()
-    );
+        body: isLoading ? _buildSkeletonizer() : _buildContent());
   }
 
 //// الهيكل العضمي للعناصر
@@ -138,7 +146,7 @@ class _RealStateSectionsPageState extends State<RealStateSectionsPage> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                     Expanded(
+                                    Expanded(
                                       child: Container(
                                         height: 20,
                                         color: Colors.grey.shade400,
@@ -155,8 +163,6 @@ class _RealStateSectionsPageState extends State<RealStateSectionsPage> {
                                         color: Colors.grey.shade400,
                                       ),
                                     ),
-                                    
-                                   
                                   ],
                                 ),
                               ],
