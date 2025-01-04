@@ -9,7 +9,7 @@ import 'dart:async';
 
 class DetailsPage extends StatefulWidget {
   final Details detail;
-  const DetailsPage({super.key, required this.detail});
+  const DetailsPage({super.key, required this.detail, });
 
   @override
   State<DetailsPage> createState() => _DetailsPageState();

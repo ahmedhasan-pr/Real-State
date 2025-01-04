@@ -1,4 +1,5 @@
-import 'dart:ffi';
+// ignore_for_file: file_names
+
 import 'dart:ui' as ui; // تعيين بادئة لمكتبة dart:ui
 
 import 'package:flutter/material.dart';
@@ -6,7 +7,7 @@ import 'package:search_page/search_page.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class RealStateSectionsPage extends StatefulWidget {
-  RealStateSectionsPage({super.key});
+  const RealStateSectionsPage({super.key, required String section});
 
   @override
   State<RealStateSectionsPage> createState() => _RealStateSectionsPageState();
@@ -26,7 +27,7 @@ class _RealStateSectionsPageState extends State<RealStateSectionsPage> {
     super.initState();
 
     ///محاكاة تحميل البيانات لمدة 3 ثانية
-    Future.delayed(Duration(seconds: 3), () {
+    Future.delayed(const Duration(seconds: 3), () {
       setState(() {
         isLoading = false;
 
@@ -35,38 +36,39 @@ class _RealStateSectionsPageState extends State<RealStateSectionsPage> {
     });
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: PreferredSize(
-          preferredSize: ui.Size.fromHeight(70.0), // تعيين ارتفاع AppBar
-          child: Directionality(
-            textDirection:
-                TextDirection.rtl, // تعيين اتجاه النص من اليمين لليسار
-            child: AppBar(
-              title: const Text('البحث'), // العنوان باللغة العربية
-              actions: [
-                IconButton(
-                  icon: const Icon(Icons.search), // أيقونة البحث
-                  onPressed: () {
-                    showSearch(
-                      context: context,
-                      delegate: SearchPage<String>(
-                        items: sections,
-                        searchLabel: '...ابحث عن العقار', // النص بالعربية
-                        suggestion: const Center(child: Text('تصفية العقار')),
-                        failure: const Center(
-                            child: Text('لم يتم العثور على العقار')),
-                        filter: (section) => [section],
-                        builder: (section) => ListTile(title: Text(section)),
-                      ),
-                    );
-                  },
-                ),
-              ],
-            ),
+      appBar: PreferredSize(
+        preferredSize: const ui.Size.fromHeight(70.0), // تعيين ارتفاع AppBar
+        child: Directionality(
+          textDirection: TextDirection.rtl, // تعيين اتجاه النص من اليمين لليسار
+          child: AppBar(
+            title: const Text('البحث'), // العنوان باللغة العربية
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.search), // أيقونة البحث
+                onPressed: () {
+                  showSearch(
+                    context: context,
+                    delegate: SearchPage<String>(
+                      items: sections,
+                      searchLabel: '...ابحث عن العقار', // النص بالعربية
+                      suggestion: const Center(child: Text('تصفية العقار')),
+                      failure:
+                          const Center(child: Text('لم يتم العثور على العقار')),
+                      filter: (section) => [section],
+                      builder: (section) => ListTile(title: Text(section)),
+                    ),
+                  );
+                },
+              ),
+            ],
           ),
         ),
-        body: isLoading ? _buildSkeletonizer() : _buildContent());
+      ),
+      body: isLoading ? _buildSkeletonizer() : _buildContent(),
+    );
   }
 
 //// الهيكل العضمي للعناصر
@@ -192,8 +194,10 @@ class _RealStateSectionsPageState extends State<RealStateSectionsPage> {
             padding: const EdgeInsets.symmetric(
                 horizontal: 10, vertical: 5), // الحواف الخارجية
             child: Card(
+              elevation: 5,
+              shadowColor: Colors.black,
               clipBehavior: Clip.antiAlias,
-              color: Colors.amber.shade50, // لون خلفية البطاقة
+              color: Colors.grey.shade50, // لون خلفية البطاقة
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
