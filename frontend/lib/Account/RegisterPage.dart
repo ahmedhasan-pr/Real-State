@@ -16,8 +16,7 @@ class _RegisterPageState extends State<RegisterPage> {
   final confirmpasswordTextController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
+    return  Scaffold(
         resizeToAvoidBottomInset: false,
        
         backgroundColor: Colors.white,
@@ -192,7 +191,7 @@ class _RegisterPageState extends State<RegisterPage> {
             ),
           ],
         ),
-      ),
+      
     );
   }
 }

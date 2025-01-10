@@ -7,7 +7,7 @@ import 'package:search_page/search_page.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class RealStateSectionsPage extends StatefulWidget {
-  const RealStateSectionsPage({super.key, required String section});
+  const RealStateSectionsPage({super.key, });
 
   @override
   State<RealStateSectionsPage> createState() => _RealStateSectionsPageState();

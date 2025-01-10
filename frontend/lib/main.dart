@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
       create: (context)=>FavoriteProvider(),
       child: MaterialApp(
        debugShowCheckedModeBanner: false,
-       home: NavBarPage()
+       home: Intropage()
       ),
     );
   }

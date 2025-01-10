@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/Model/model.dart';
 import 'package:frontend/Screen/DetailsPage.dart';
 import 'package:frontend/Screen/NotificationsPage.dart';
+import 'package:frontend/Screen/RealStateSectionsPage.dart';
 import 'package:search_page/search_page.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:frontend/Api/api.dart';
@@ -16,6 +17,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
+      late AnimationController _controller;
   late Future<List<Details>> futureDetails;
   final List<String> sections = [
     'Residential',
@@ -30,10 +32,10 @@ class _HomePageState extends State<HomePage>
   @override
   void initState() {
     super.initState();
-
+   _controller = AnimationController(duration: Duration(seconds: 1),vsync: this)..forward();
     futureDetails = getAllDetails();
 
-    Future.delayed(const Duration(seconds: 3), () {
+    Future.delayed(const Duration(seconds: 5), () {
       setState(() {
         _isLoading = false;
       });
@@ -64,184 +66,187 @@ class _HomePageState extends State<HomePage>
           ),
         ],
       ),
-      body: CustomScrollView(
-        slivers: [
-          const SliverToBoxAdapter(
-            child: Padding(
-              padding: EdgeInsets.only(right: 20, top: 20),
-              child: Directionality(
-                textDirection: TextDirection.rtl,
-                child: Text(
-                  " اكتشف\n منزلك الجديد",
-                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+      body: FadeTransition(
+        opacity: _controller,
+        child: CustomScrollView(
+          slivers: [
+            const SliverToBoxAdapter(
+              child: Padding(
+                padding: EdgeInsets.only(right: 20, top: 20),
+                child: Directionality(
+                  textDirection: TextDirection.rtl,
+                  child: Text(
+                    " اكتشف\n منزلك الجديد",
+                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                  ),
                 ),
               ),
             ),
-          ),
-          const SliverToBoxAdapter(child: SizedBox(height: 20)),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white, // لون الخلفية
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20), // انحناء الحواف
-                    side: BorderSide(
-                        color: Colors.grey.shade200, width: 3), // لون الحدود
-                  ),
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-                ),
-                onPressed: () {
-                  showSearch(
-                    context: context,
-                    delegate: SearchPage<String>(
-                      items: sections, // قائمة العناصر للبحث
-                      searchLabel:
-                          '...ابحث عن العقار', // النص العربي داخل شريط البحث
-                      suggestion: const Center(
-                          child: Text('تصفية العقار')), // اقتراح أولي
-                      failure: const Center(
-                          child: Text('لم يتم العثور على العقار')), // فشل البحث
-                      filter: (section) => [section], // منطق التصفية
-                      builder: (section) =>
-                          ListTile(title: Text(section)), // بناء النتائج
+            const SliverToBoxAdapter(child: SizedBox(height: 20)),
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 27),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white, // لون الخلفية
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20), // انحناء الحواف
+                      side: BorderSide(
+                          color: Colors.grey.shade200, width: 3), // لون الحدود
                     ),
-                  );
-                },
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                  ),
+                  onPressed: () {
+                    showSearch(
+                      context: context,
+                      delegate: SearchPage<String>(
+                        items: sections, // قائمة العناصر للبحث
+                        searchLabel:
+                            '...ابحث عن العقار', // النص العربي داخل شريط البحث
+                        suggestion: const Center(
+                            child: Text('تصفية العقار')), // اقتراح أولي
+                        failure: const Center(
+                            child: Text('لم يتم العثور على العقار')), // فشل البحث
+                        filter: (section) => [section], // منطق التصفية
+                        builder: (section) =>
+                            ListTile(title: Text(section)), // بناء النتائج
+                      ),
+                    );
+                  },
+                  child: Directionality(
+                    textDirection: TextDirection.rtl,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'أماكن البحث',
+                          style: TextStyle(
+                            color: Colors.black, // لون النص
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Icon(Icons.search,
+                            color: Colors.yellow.shade900,
+                            size: 35), // أيقونة البحث
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            const SliverToBoxAdapter(child: SizedBox(height: 20)),
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10),
                 child: Directionality(
                   textDirection: TextDirection.rtl,
                   child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      const Text(
-                        'أماكن البحث',
-                        style: TextStyle(
-                          color: Colors.black, // لون النص
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
+                      MaterialButton(
+                        onPressed: () {},
+                        color: Colors.yellow.shade900,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 10, horizontal: 20),
+                        child: const Text(
+                          "منزل",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                          ),
                         ),
                       ),
-                      Icon(Icons.search,
-                          color: Colors.yellow.shade900,
-                          size: 35), // أيقونة البحث
+                      MaterialButton(
+                        onPressed: () {},
+                        color: Colors.yellow.shade900,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 10, horizontal: 20),
+                        child: const Text(
+                          "شقق",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                          ),
+                        ),
+                      ),
+                      MaterialButton(
+                        onPressed: () {},
+                        color: Colors.yellow.shade900,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 10, horizontal: 20),
+                        child: const Text(
+                          "قطع اراضي",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
               ),
             ),
-          ),
-          const SliverToBoxAdapter(child: SizedBox(height: 20)),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              child: Directionality(
-                textDirection: TextDirection.rtl,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    MaterialButton(
-                      onPressed: () {},
-                      color: Colors.yellow.shade900,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 10, horizontal: 20),
-                      child: const Text(
-                        "منزل",
+            const SliverToBoxAdapter(child: SizedBox(height: 10)),
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25),
+                child: Directionality(
+                  textDirection: TextDirection.rtl,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        " عقار مميز",
                         style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                        ),
-                      ),
-                    ),
-                    MaterialButton(
-                      onPressed: () {},
-                      color: Colors.yellow.shade900,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 10, horizontal: 20),
-                      child: const Text(
-                        "شقق",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                        ),
-                      ),
-                    ),
-                    MaterialButton(
-                      onPressed: () {},
-                      color: Colors.yellow.shade900,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 10, horizontal: 20),
-                      child: const Text(
-                        "قطع اراضي",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          const SliverToBoxAdapter(child: SizedBox(height: 20)),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25),
-              child: Directionality(
-                textDirection: TextDirection.rtl,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "عقار مميز",
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.yellow.shade900,
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () {},
-                      style: TextButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12), // شكل الزر
-                        ),
-                      ),
-                      child: const Text(
-                        "اظهار الكل ",
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 16,
+                          fontSize: 22,
                           fontWeight: FontWeight.bold,
+                          color: Colors.yellow.shade900,
                         ),
                       ),
-                    ),
-                  ],
+                      TextButton(
+                        onPressed: ()=>Navigator.push(context, MaterialPageRoute(builder: (context) => RealStateSectionsPage(),)),
+                        style: TextButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12), // شكل الزر
+                          ),
+                        ),
+                        child: const Text(
+                          "اظهار الكل ",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-          const SliverToBoxAdapter(child: SizedBox(height: 20)),
-          SliverFillRemaining(
-            hasScrollBody: false,
-            child: SizedBox(
-              height: 10, // تحديد الحجم الثابت
-              child: _isLoading ? _buildSkeletonizer() : _buildTabContent(),
+            const SliverToBoxAdapter(child: SizedBox(height: 10)),
+            SliverFillRemaining(
+              hasScrollBody: false,
+              child: SizedBox(
+                height: 10, // تحديد الحجم الثابت
+                child: _isLoading ? _buildSkeletonizer() : _buildTabContent(),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -297,7 +302,7 @@ class _HomePageState extends State<HomePage>
                   ),
                   // محاكاة السعر
                   Positioned(
-                    top: 210,
+                    top: 205,
                     right: 15,
                     child: Container(
                       width: 120,
@@ -310,7 +315,7 @@ class _HomePageState extends State<HomePage>
                   ),
                   // محاكاة نوع السعر
                   Positioned(
-                    top: 250,
+                    top: 245,
                     right: 15,
                     child: Container(
                       width: 50,
@@ -320,7 +325,7 @@ class _HomePageState extends State<HomePage>
                   ),
                   // محاكاة الموقع
                   Positioned(
-                    top: 280,
+                    top: 275,
                     right: 15,
                     child: Row(
                       children: [

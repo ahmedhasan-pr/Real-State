@@ -44,8 +44,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
+    return Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: Colors.white,
         body: Column(
@@ -236,7 +235,7 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ],
         ),
-      ),
+      
     );
   }
 }
