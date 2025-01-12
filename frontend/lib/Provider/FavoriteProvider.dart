@@ -3,13 +3,13 @@ import 'package:frontend/Model/model.dart';
 import 'package:provider/provider.dart';
 
 class FavoriteProvider with ChangeNotifier {
-  List<Details> _favorite = [];
+  List<House> _favorite = [];
 
   ///  الحصول على قائمة المفضلة
-  List<Details> get favorite => _favorite;
+  List<House> get favorite => _favorite;
 
   // أضف العنصر إلى المفضلة
-  void toggleFavorite(Details details) {
+  void toggleFavorite(House details) {
     if (_favorite.contains(details)) {
       _favorite.remove(details);
     } else {
@@ -18,7 +18,7 @@ class FavoriteProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  bool isExist(Details details) {
+  bool isExist(House details) {
     final isExit = _favorite.contains(details);
     return isExit;
   }

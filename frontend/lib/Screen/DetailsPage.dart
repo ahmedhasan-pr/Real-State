@@ -8,7 +8,7 @@ import 'package:photo_view/photo_view_gallery.dart';
 import 'dart:async';
 
 class DetailsPage extends StatefulWidget {
-  final Details detail;
+  final House detail;
   const DetailsPage({super.key, required this.detail, });
 
   @override

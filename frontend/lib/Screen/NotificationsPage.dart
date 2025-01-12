@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';  // استيراد مكتبة intl لتنسيق التاريخ
+import 'package:frontend/Api/api.dart'; // استيراد ملف API
+import 'package:frontend/Model/model.dart';  // استيراد نموذج الإشعار
 
 class NotificationsPage extends StatelessWidget {
   const NotificationsPage({super.key});
@@ -18,17 +20,32 @@ class NotificationsPage extends StatelessWidget {
           ),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          children: [
-            NotificationCard(
-              message: 'لقد تم تحديث التطبيق.',
-              date: DateTime.now(),  // التاريخ الحالي
-            ),
-            
-          ],
-        ),
+      body: FutureBuilder<List<Notifications>>(
+        future: getNotifications(),  // استدعاء دالة جلب الإشعارات من ملف api.dart
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Center(child: Text('لا توجد إشعارات.'));
+          } else {
+            // عرض الإشعارات
+            return Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: ListView.builder(
+                itemCount: snapshot.data!.length,
+                itemBuilder: (context, index) {
+                  var notification = snapshot.data![index];
+                  return NotificationCard(
+                    message: notification.message,
+                    date: notification.createdAt,
+                  );
+                },
+              ),
+            );
+          }
+        },
       ),
     );
   }
@@ -48,24 +65,24 @@ class NotificationCard extends StatelessWidget {
   Widget build(BuildContext context) {
     // تنسيق التاريخ باستخدام intl
     String formattedDate = DateFormat('yyyy-MM-dd').format(date);
-
-    String formatttedTime = DateFormat('hh:mm a').format(date);
+    String formattedTime = DateFormat('hh:mm a').format(date);
 
     String displayDate;
     final currentDate = DateTime.now();
 
-    if(date.year == currentDate.year &&
-        date.month == currentDate.month && 
-        date.day == currentDate.day ){
-          displayDate = formatttedTime;
-        } else{
-          displayDate = formattedDate;
-        }
+    if (date.year == currentDate.year &&
+        date.month == currentDate.month &&
+        date.day == currentDate.day) {
+      displayDate = formattedTime;
+    } else {
+      displayDate = formattedDate;
+    }
 
     return SizedBox(
-      height: 130,
-      width: double.infinity,  // استخدام الحجم الكامل لعرض البطاقة
+      height: 150,
+      width: double.infinity,
       child: Card(
+        margin: const EdgeInsets.symmetric(vertical: 10),
         color: Colors.blueGrey[100],
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
@@ -74,7 +91,6 @@ class NotificationCard extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(15.0),
           child: Column(
-            
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -96,21 +112,20 @@ class NotificationCard extends StatelessWidget {
                       color: Colors.black,
                     ),
                   ),
-                  // عرض الرسالة
-                 
                 ],
               ),
-              const SizedBox(height: 20,),
-               Flexible(
-                    child: Text(
-                      message,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        color: Colors.black87,
-                      ),
-                      overflow: TextOverflow.ellipsis,  // لتجنب تجاوز النص
-                    ),
+              const SizedBox(height: 20),
+              Flexible(
+                child: Text(
+                  message,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black87,
                   ),
+                  overflow: TextOverflow.ellipsis, // لتجنب تجاوز النص
+                ),
+              ),
             ],
           ),
         ),

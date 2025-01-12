@@ -1,29 +1,30 @@
 from django.shortcuts import HttpResponse
-from .models import Details,Notification
-from .serializers import DetailsSerializer, LoginSerializer,NotificationSerializer
+from .models import  Apartments, Featuredproperty, House,Notification, Plotsofland
+from .serializers import HouseSerializer, LoginSerializer,NotificationSerializer
 from rest_framework.generics import ListAPIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.contrib.auth import authenticate, login
 from rest_framework import status ,viewsets
+from rest_framework.permissions import IsAuthenticated
 
 
-class DetailsList(ListAPIView):
-    queryset = Details.objects.all()
-    serializer_class = DetailsSerializer
 
-class ToggleFavorite(APIView):
-    def post(self,request,pk):
-        try:
-            details = Details.objects.get(pk=pk)
-        except Details.DoesNotExist:
-            return Response({"error":"لم يتم العثور على العنصر"},status=status.HTTP_404_NOT_FOUND)
-        
-         # التبديل بين المفضلة
+class HouseList(ListAPIView):
+    queryset = House.objects.all()
+    serializer_class = HouseSerializer
 
-        details.favorite = not details.favorite # type: ignore
-        details.save()
-        return Response({"favorite":details.favorite},status=status.HTTP_200_OK)
+class ApartmentsList(ListAPIView):
+    queryset = Apartments.objects.all()
+    serializer_class = HouseSerializer
+
+class PlotsoflandList(ListAPIView):
+    queryset = Plotsofland.objects.all()
+    serializer_class = HouseSerializer
+
+class FeaturedpropertyList(ListAPIView):
+    queryset = Featuredproperty.objects.all()
+    serializer_class = HouseSerializer
 
 
 
@@ -43,6 +44,6 @@ def home(request):
     return HttpResponse("مرحبا بك في الصفحة الرئيسية")
 
 
-class NotificationViewset(viewsets.ModelViewSet):
+class NotificationViewSet(viewsets.ModelViewSet):
     queryset = Notification.objects.all()
     serializer_class = NotificationSerializer

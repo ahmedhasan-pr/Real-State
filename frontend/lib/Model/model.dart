@@ -1,4 +1,4 @@
-class Details {
+class House {
   final List<String> image;
   final String price;
   final String typePrice;
@@ -8,9 +8,9 @@ class Details {
   final int room;
   final bool garage;
   final String description;
-  bool favorite;  // إضافة حقل المفضلة
+  bool favorite; // إضافة حقل المفضلة
 
-  Details({
+  House({
     required this.image,
     required this.price,
     required this.typePrice,
@@ -20,16 +20,16 @@ class Details {
     required this.room,
     required this.garage,
     required this.description,
-    required this.favorite,  // إضافة هذا الحقل في الكونستركتور
+    required this.favorite, // إضافة هذا الحقل في الكونستركتور
   });
 
-  factory Details.fromJson(Map<String, dynamic> json) {
-    return Details(
+  factory House.fromJson(Map<String, dynamic> json) {
+    return House(
       image: (json['image'] is List)
           ? List<String>.from(json['image'])
           : (json['image'] is String)
               ? [json['image']]
-              : [], 
+              : [],
       price: json['price'].toString(),
       typePrice: json['typePrice'] ?? '',
       location: json['location'] ?? '',
@@ -60,5 +60,23 @@ class Details {
       'description': description,
       'favorite': favorite, // إضافة حقل المفضلة هنا
     };
+  }
+}
+
+/// الاشعارات
+
+class Notifications {
+  final String message;
+  final DateTime createdAt;
+
+  Notifications({
+    required this.message,
+    required this.createdAt,
+  });
+  factory Notifications.fromJson(Map<String, dynamic> json) {
+    return Notifications(
+      message: json['message'],  // الرسالة 
+       createdAt: DateTime.parse(json['created_at']),  // التاريخ
+    );
   }
 }

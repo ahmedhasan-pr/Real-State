@@ -1,11 +1,25 @@
 from rest_framework import serializers
-from .models import Details , Notification
+from .models import Apartments, Featuredproperty, House , Notification, Plotsofland
 from django.contrib.auth import authenticate
 
-class DetailsSerializer(serializers.ModelSerializer):
+class HouseSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Details
+        model = House
         fields = '__all__'
+        
+class ApartmentsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Apartments
+        fields = '__all__'
+class PlotsoflandSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Plotsofland
+        fields = '__all__'
+class FeaturedpropertySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Featuredproperty
+        fields = '__all__'
+
 
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField(required=True)

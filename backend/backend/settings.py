@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'api',
-    'rest_framework'
+    'rest_framework',
+    'rest_framework_simplejwt',
 ]
 
 MIDDLEWARE = [
@@ -132,13 +133,21 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
-    'DEFAULT_RENDERER_CLASSES': [
-        'rest_framework.renderers.JSONRenderer',  # تأكد من أن هذا هو الاسم الصحيح
+    # تعريف الفئات المستخدمة للمصادقة في Django Rest Framework
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        # استخدام JWT Authentication (JSON Web Token) من مكتبة simplejwt
+        'rest_framework_simplejwt.authentication.JWTAuthentication',  # يتم استخدام JWT للتحقق من هوية المستخدم
     ],
+    
+    # تعريف فئات الصلاحيات في Django Rest Framework
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny',  # السماح لأي شخص بالوصول
+        # السماح بالقراءة لأي شخص، لكن التعديل والمشاركة يتطلب تسجيل الدخول
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',  # يجب على المستخدم أن يكون مسجلًا لتعديل البيانات، ولكن يمكن للجميع القراءة
     ],
 }
+
+
+
 # إعدادات السجل
 LOGGING = {
     'version': 1,

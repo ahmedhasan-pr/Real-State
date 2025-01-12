@@ -18,7 +18,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
       late AnimationController _controller;
-  late Future<List<Details>> futureDetails;
+  late Future<List<House>> futureDetails;
   final List<String> sections = [
     'Residential',
     'Commercial',
@@ -252,7 +252,7 @@ class _HomePageState extends State<HomePage>
   }
 
   Widget _buildTabContent() {
-    return FutureBuilder<List<Details>>(
+    return FutureBuilder<List<House>>(
       future: futureDetails,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -350,7 +350,7 @@ class _HomePageState extends State<HomePage>
   }
 
   // عرض العناصر
-  Widget _buildContent(List<Details> data) {
+  Widget _buildContent(List<House> data) {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: ListView.builder(
