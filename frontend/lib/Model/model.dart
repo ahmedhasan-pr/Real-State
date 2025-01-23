@@ -80,3 +80,27 @@ class Notifications {
     );
   }
 }
+
+//// البيانات الخاصة بالمستخدم
+class User {
+  final String email;
+  final String password;
+
+  User({required this.email, required this.password});
+
+  // تحويل البيانات من JSON إلى User
+  factory User.fromJson(Map<String, dynamic> json) {
+    return User(
+      email: json['email'],
+      password: json['password'],  // في حال إذا كانت API تعيد كلمة المرور، يمكن أخذها هنا
+    );
+  }
+
+  // تحويل نموذج المستخدم إلى JSON (في حال إرسال بيانات للـ API)
+  Map<String, dynamic> toJson() {
+    return {
+      'email': email,
+      'password': password,
+    };
+  }
+}

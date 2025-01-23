@@ -1,44 +1,150 @@
 from django.shortcuts import HttpResponse
 from .models import  Apartments, Featuredproperty, House,Notification, Plotsofland
-from .serializers import HouseSerializer, LoginSerializer,NotificationSerializer
+from .serializers import HouseSerializer, LoginSerializer,SignupSerializer,NotificationSerializer
 from rest_framework.generics import ListAPIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from django.contrib.auth import authenticate, login
+from django.contrib.auth.models import User
 from rest_framework import status ,viewsets
 from rest_framework.permissions import IsAuthenticated
 
 
 
-class HouseList(ListAPIView):
+class HouseList(viewsets.ModelViewSet):
     queryset = House.objects.all()
     serializer_class = HouseSerializer
 
-class ApartmentsList(ListAPIView):
+class ApartmentsList(viewsets.ModelViewSet):
     queryset = Apartments.objects.all()
     serializer_class = HouseSerializer
 
-class PlotsoflandList(ListAPIView):
+class PlotsoflandList(viewsets.ModelViewSet):
     queryset = Plotsofland.objects.all()
     serializer_class = HouseSerializer
 
-class FeaturedpropertyList(ListAPIView):
+class FeaturedpropertyList(viewsets.ModelViewSet):
     queryset = Featuredproperty.objects.all()
     serializer_class = HouseSerializer
 
-
-
-class LoginView(APIView):
-    def get(self, request):
-        return Response({"message": "يرجى إرسال بيانات الاعتماد عبر POST"}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+class SignupView(APIView):
+    
     def post(self, request):
+        # محاولة إنشاء حساب مستخدم جديد
+        serializer = SignupSerializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.save()
+            return Response({"message": "تم إنشاء الحساب بنجاح", "user": user.email}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def get(self, request, pk=None):
+        if pk:  # إذا كان `pk` موجودًا، جلب مستخدم معين
+            try:
+                user = User.objects.get(pk=pk)
+                return Response({"id": user.id, "email": user.email}, status=status.HTTP_200_OK)
+            except User.DoesNotExist:
+                return Response({"error": "المستخدم غير موجود"}, status=status.HTTP_404_NOT_FOUND)
+        else:  # إذا لم يكن `pk` موجودًا، جلب جميع المستخدمين
+            users = User.objects.all()
+            data = [{"id": user.id, "email": user.email} for user in users]
+            return Response(data, status=status.HTTP_200_OK)
+    
+    def put(self, request, pk):
+        # تحديث بيانات المستخدم
+        if not pk:
+            return Response({"message": "يجب توفير معرّف المستخدم (pk)"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            user = User.objects.get(pk=pk)
+        except User.DoesNotExist:
+            return Response({"message": "المستخدم غير موجود"}, status=status.HTTP_404_NOT_FOUND)
+        
+        # تفعيل التحديث الجزئي (partial=True)
+        serializer = SignupSerializer(user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"message": "تم تحديث البيانات بنجاح", "user": serializer.data}, status=status.HTTP_200_OK)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def delete(self, request, pk):
+        # حذف مستخدم
+        if not pk:
+            return Response({"message": "يجب توفير معرّف المستخدم (pk)"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            user = User.objects.get(pk=pk)
+            user.delete()
+            return Response({"message": "تم حذف المستخدم بنجاح"}, status=status.HTTP_204_NO_CONTENT)
+        except User.DoesNotExist:
+            return Response({"message": "المستخدم غير موجود"}, status=status.HTTP_404_NOT_FOUND)
+class LoginView(APIView):
+
+    def post(self, request):
+        # محاولة تسجيل الدخول
         serializer = LoginSerializer(data=request.data)
+        
         if serializer.is_valid():
             user = serializer.validated_data['user']
-            login(request, user)
-            return Response({"message": "تم تسجيل الدخول بنجاح"}, status=status.HTTP_200_OK)
-        print(serializer.errors) 
+            # إرجاع استجابة بنجاح مع البريد الإلكتروني للمستخدم فقط
+            return Response({
+                "message": "تم تسجيل الدخول بنجاح",
+                "user": user.email,
+            }, status=status.HTTP_200_OK)
+        
+        # إرجاع الخطأ إذا كانت البيانات غير صحيحة
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def get(self, request, pk=None):
+        # إذا كان `pk` موجودًا، جلب بيانات مستخدم معين
+        if pk:
+            try:
+                user = User.objects.get(pk=pk)
+                return Response({
+                    "id": user.id,
+                    "email": user.email,
+                    "username": user.username
+                }, status=status.HTTP_200_OK)
+            except User.DoesNotExist:
+                return Response({"error": "المستخدم غير موجود"}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            return Response({"message": "يجب تحديد معرّف المستخدم"}, status=status.HTTP_400_BAD_REQUEST)
+
+    def put(self, request, pk=None):
+        # إذا كان `pk` موجودًا، تحديث بيانات المستخدم
+        if pk:
+            try:
+                user = User.objects.get(pk=pk)
+            except User.DoesNotExist:
+                return Response({"error": "المستخدم غير موجود"}, status=status.HTTP_404_NOT_FOUND)
+
+            # التحقق من أن المستخدم هو نفسه من يحاول التحديث (يمكنك إضافة هذا إذا أردت)
+            if user.email != request.data.get('email') and User.objects.filter(email=request.data.get('email')).exists():
+                return Response({"error": "البريد الإلكتروني مستخدم بالفعل."}, status=status.HTTP_400_BAD_REQUEST)
+
+            # تحديث البيانات باستخدام `SignupSerializer`
+            serializer = SignupSerializer(user, data=request.data, partial=True)
+            if serializer.is_valid():
+                user = serializer.save()
+                return Response({
+                    "message": "تم تحديث البيانات بنجاح",
+                    "user": user.email
+                }, status=status.HTTP_200_OK)
+
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response({"message": "يجب تحديد معرّف المستخدم"}, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk=None):
+        # إذا كان `pk` موجودًا، حذف المستخدم
+        if pk:
+            try:
+                user = User.objects.get(pk=pk)
+                user.delete()
+                return Response({"message": "تم حذف المستخدم بنجاح"}, status=status.HTTP_204_NO_CONTENT)
+            except User.DoesNotExist:
+                return Response({"error": "المستخدم غير موجود"}, status=status.HTTP_404_NOT_FOUND)
+        
+        return Response({"message": "يجب تحديد معرّف المستخدم"}, status=status.HTTP_400_BAD_REQUEST)
 
 def home(request):
     return HttpResponse("مرحبا بك في الصفحة الرئيسية")

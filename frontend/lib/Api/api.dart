@@ -41,3 +41,70 @@ Future<List<Notifications>> getNotifications() async {
     throw Exception('حدث خطأ أثناء جلب الإشعارات: $e');
   }
 }
+
+Future<void> registerUser(String email, String password, String confirmPassword) async {
+  final url = Uri.parse('http://10.0.2.2:8000/api/signup/'); // URL الخاص بـ API
+
+  try {
+    // إرسال بيانات التسجيل
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode({
+        'email': email,
+        'password': password,
+        'confirm_password': confirmPassword,
+      }),
+    );
+
+    if (response.statusCode == 201) {
+      // نجاح التسجيل
+      print('User signup successfully');
+    } else {
+      // فشل التسجيل - عرض التفاصيل من الاستجابة
+      print('Failed to signup user: ${response.body}');
+    }
+  } catch (e) {
+    // التعامل مع الخطأ عند حدوث مشكلة في الاتصال
+    print('Error occurred: $e');
+  }
+}
+
+///تسجيل الدخول 
+
+
+Future<void> loginUser(String email, String password) async {
+  final url = Uri.parse('http://10.0.2.2:8000/api/login/');
+
+  try {
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode({
+        'email': email,
+        'password': password,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      // إذا كانت الاستجابة ناجحة
+      print('User logged in successfully');
+      // يمكنك هنا تنفيذ أي إجراء بعد تسجيل الدخول بنجاح، مثل تخزين التوكن أو الانتقال لصفحة أخرى.
+    } else {
+      // فشل تسجيل الدخول
+      final errorResponse = json.decode(response.body);
+      String errorMessage = 'حدث خطأ في تسجيل الدخول';
+
+      // تحقق من وجود خطأ في الاستجابة
+      if (errorResponse.containsKey('non_field_errors')) {
+        errorMessage = errorResponse['non_field_errors'][0]; // استرجاع الرسالة من الـ API
+      }
+
+      // طباعة الرسالة أو التعامل معها بطريقة مخصصة
+      print('Failed to log in: $errorMessage');
+    }
+  } catch (e) {
+    // التعامل مع الأخطاء في الشبكة أو الطلب
+    print('Error occurred: $e');
+  }
+}

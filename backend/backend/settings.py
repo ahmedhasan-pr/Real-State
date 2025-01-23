@@ -70,8 +70,13 @@ TEMPLATES = [
         },
     },
 ]
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',  # يسمح باستخدام البريد الإلكتروني كـ username
+]
 
 WSGI_APPLICATION = 'backend.wsgi.application'
+AUTH_USER_MODEL = 'auth.User'  # استخدم نموذج المستخدم الافتراضي من Django
+
 
 
 # Database
@@ -133,16 +138,24 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
-    # تعريف الفئات المستخدمة للمصادقة في Django Rest Framework
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        # استخدام JWT Authentication (JSON Web Token) من مكتبة simplejwt
-        'rest_framework_simplejwt.authentication.JWTAuthentication',  # يتم استخدام JWT للتحقق من هوية المستخدم
-    ],
+    # # تعريف الفئات المستخدمة للمصادقة في Django Rest Framework
+    # 'DEFAULT_AUTHENTICATION_CLASSES': [
+    #     # استخدام JWT Authentication (JSON Web Token) من مكتبة simplejwt
+    #     'rest_framework_simplejwt.authentication.JWTAuthentication',  # يتم استخدام JWT للتحقق من هوية المستخدم
+    # ],
     
-    # تعريف فئات الصلاحيات في Django Rest Framework
-    'DEFAULT_PERMISSION_CLASSES': [
-        # السماح بالقراءة لأي شخص، لكن التعديل والمشاركة يتطلب تسجيل الدخول
-        'rest_framework.permissions.IsAuthenticatedOrReadOnly',  # يجب على المستخدم أن يكون مسجلًا لتعديل البيانات، ولكن يمكن للجميع القراءة
+    # # تعريف فئات الصلاحيات في Django Rest Framework
+    # 'DEFAULT_PERMISSION_CLASSES': [
+    #     # السماح بالقراءة لأي شخص، لكن التعديل والمشاركة يتطلب تسجيل الدخول
+    #     'rest_framework.permissions.IsAuthenticatedOrReadOnly',  # يجب على المستخدم أن يكون مسجلًا لتعديل البيانات، ولكن يمكن للجميع القراءة
+    # ],
+     'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',  # اجعل المسار مفتوحًا للجميع
+        
+    ],
+     'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',  # عرض البيانات بصيغة JSON
+        'rest_framework.renderers.BrowsableAPIRenderer',  # عرض النماذج في المتصفح
     ],
 }
 
