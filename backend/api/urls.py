@@ -19,9 +19,8 @@ urlpatterns = [
     path("notification/", NotificationViewSet.as_view({'get': 'list', 'post': 'create'}), name="notification"),
     path("featuredprperty/", FeaturedpropertyList.as_view({'get': 'list', 'post': 'create'}), name="featuredproperty_list"),
     path("featuredprperty/<int:pk>", FeaturedpropertyList.as_view({'get':'retrieve', 'put':'update','delete':'destroy'}), name="featuredproperty_list"),
-    path('signup/', SignupView.as_view(), name='signup'),#Get , Post
-    path('signup/<int:pk>/', SignupView.as_view(), name='signup-detail'),#Put , Delete
-    path('login/<int:pk>/', LoginView.as_view(), name='login-detail'),  # لتحديد معرّف المستخدم
+    path('signup/', SignupView.as_view({'get': 'list', 'post': 'create'}), name='signup'),#Get , Post
+    path('signup/<int:pk>/', SignupView.as_view({'get':'retrieve', 'put':'update','delete':'destroy'}), name='signup-detail'),#Put , Delete
     path('login/', LoginView.as_view(), name='login'),
     path("", home, name="home"),
 ]

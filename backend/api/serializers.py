@@ -82,9 +82,10 @@ class SignupSerializer(serializers.Serializer):
 
 
 class LoginSerializer(serializers.Serializer):
-    username = serializers.CharField(max_length=100)  # إضافة حقل اسم المستخدم
-    email = serializers.EmailField()  # الحقل الذي يتطلب البريد الإلكتروني
-    password = serializers.CharField(write_only=True)  # كلمة المرور
+    
+    username = serializers.CharField(max_length=100,help_text = "اسم المستخدم")  # إضافة حقل اسم المستخدم
+    email = serializers.EmailField(help_text="البريد الاكتروني")  # الحقل الذي يتطلب البريد الإلكتروني
+    password = serializers.CharField(write_only=True,help_text = "كلمة المرور")  # كلمة المرور
 
     def validate(self, data):
         print(f"Received data: {data}")  # لطباعة البيانات المستلمة
